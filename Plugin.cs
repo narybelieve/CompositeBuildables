@@ -3,7 +3,7 @@ using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 
-namespace DegasiPlanterMod;
+namespace CompositeBuildables;
 
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 [BepInDependency("com.snmodding.nautilus")]
@@ -28,25 +28,25 @@ public class Plugin : BaseUnityPlugin
     
     private void InitializeBuildables()
     {
-        Buildables.SmallFernPalmClone.Register();
-        Buildables.MediumFernPalmClone.Register();
-        Buildables.FernPalmClone.Register();
+        SmallFernPalmClone.Register();
+        MediumFernPalmClone.Register();
+        FernPalmClone.Register();
         
-        Buildables.LanternTreeClone.Register();
+        LanternTreeClone.Register();
         
-        Buildables.TropicalPlant6bClone.Register(); // Spindly tall plant. Not a default growable.
-        Buildables.TropicalPlant10aClone.Register(); // Vine fill. Not a default growable.
+        TropicalPlant6bClone.Register(); // Spindly tall plant. Not a default growable.
+        TropicalPlant10aClone.Register(); // Vine fill. Not a default growable.
         
-        Buildables.VoxelShrubClone.Register();
+        VoxelShrubClone.Register();
         
-        Buildables.JaffaCupClone.Register();
-        Buildables.GrubBasketClone.Register();
+        JaffaCupClone.Register();
+        GrubBasketClone.Register();
         
-        Buildables.SpeckledRattlerClone.Register();
-        Buildables.PinkCapClone.Register();
+        SpeckledRattlerClone.Register();
+        PinkCapClone.Register();
         
-        Buildables.RedTippedFernClone.Register(); // "LandPlant1" in DecorationsMod. Not a default growable.
+        RedTippedFernClone.Register(); // "LandPlant1" in DecorationsMod. Not a default growable.
         
-        Buildables.DegasiPlanterAssembly.Register(); // Uses Planter as core as it has the right origin
+        DegasiPlanter.Register(); // Uses Planter as core as it has the right origin
     }
 }

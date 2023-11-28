@@ -9,7 +9,7 @@ using UnityEngine;
 using BepInEx;
 using Nautilus.Utility;
 
-namespace DegasiPlanterMod.Buildables;
+namespace CompositeBuildables;
 
 public static class FernPalmClone
 {

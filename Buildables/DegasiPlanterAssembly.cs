@@ -13,9 +13,9 @@ using UWE;
 
 using System.Collections; // IEnumerator
 
-namespace DegasiPlanterMod.Buildables;
+namespace CompositeBuildables;
 
-public static class DegasiPlanterAssembly
+public static class DegasiPlanter
 {
     static GameObject smallFernPalmObj;
     static GameObject mediumFernPalmObj;
