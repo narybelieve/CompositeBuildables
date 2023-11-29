@@ -5,6 +5,7 @@ using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
 using Nautilus.Extensions;
 using UnityEngine;
+using UnityEditor;
 
 using BepInEx;
 using Nautilus.Utility;
@@ -17,244 +18,99 @@ namespace CompositeBuildables;
 
 public static class DegasiPlanter
 {
-    static GameObject smallFernPalmObj;
-    static GameObject mediumFernPalmObj;
-    static GameObject fernPalmObj;
-    static GameObject lanternTreeObj;
-    static GameObject tropicalPlant6bObj;
-    static GameObject tropicalPlant10aObj;
-    static GameObject voxelShrubObj;
-    static GameObject jaffaCupObj;
-    static GameObject grubBasketObj;
-    static GameObject redTippedFernObj;
-    static GameObject pinkCapObj;
-    static GameObject speckledRattlerObj;
-  
     public static PrefabInfo Info { get; } = PrefabInfo
-        .WithTechType("DegasiPlanterAssembly", "Degasi Planter (Assembly)", "Bart Torgal's planter from Degasi Base 1-a.")
+        .WithTechType("DegasiPlanter", "Degasi Planter", "Bart Torgal's planter from Degasi Base 1-a.")
         // set the icon to that of the vanilla locker:
         .WithIcon(SpriteManager.Get(TechType.PlanterBox));
     
-    public static IEnumerator InitSmallFernPalm()
-    {
-        if(smallFernPalmObj == null) {
-          // Based on InitElectricalPrefab in VehicleUpgradeExample_BelowZero.cs
-          IPrefabRequest task = UWE.PrefabDatabase.GetPrefabAsync("SmallFernPalmClone");
-          yield return task;
-          task.TryGetPrefab(out GameObject objTmp);
-          smallFernPalmObj = objTmp;
-        } else 
-          yield break;
-    }
-    
-    public static IEnumerator InitMediumFernPalm()
-    {
-        if(mediumFernPalmObj == null) {
-          // Based on InitElectricalPrefab in VehicleUpgradeExample_BelowZero.cs
-          IPrefabRequest task = UWE.PrefabDatabase.GetPrefabAsync("MediumFernPalmClone");
-          yield return task;
-          task.TryGetPrefab(out GameObject objTmp);
-          mediumFernPalmObj = objTmp;
-        } else 
-          yield break;
-    }
-    
-    public static IEnumerator InitFernPalm()
-    {
-        if(fernPalmObj == null) {
-          // Based on InitElectricalPrefab in VehicleUpgradeExample_BelowZero.cs
-          IPrefabRequest task = UWE.PrefabDatabase.GetPrefabAsync("FernPalmClone");
-          yield return task;
-          task.TryGetPrefab(out GameObject objTmp);
-          fernPalmObj = objTmp;
-        } else
-          yield break;
-    }
-    
-    public static IEnumerator InitLanternTree()
-    {
-        if(lanternTreeObj == null) {
-          // Based on InitElectricalPrefab in VehicleUpgradeExample_BelowZero.cs
-          IPrefabRequest task = UWE.PrefabDatabase.GetPrefabAsync("LanternTreeClone");
-          yield return task;
-          task.TryGetPrefab(out GameObject objTmp);
-          lanternTreeObj = objTmp;
-        } else
-          yield break;
-    }
-    
-    public static IEnumerator InitTropicalPlant6b()
-    {
-        if(tropicalPlant6bObj == null) {
-          // Based on InitElectricalPrefab in VehicleUpgradeExample_BelowZero.cs
-          IPrefabRequest task = UWE.PrefabDatabase.GetPrefabAsync("TropicalPlant6bClone");
-          yield return task;
-          task.TryGetPrefab(out GameObject objTmp);
-          tropicalPlant6bObj = objTmp;
-        } else
-          yield break;
-    }
-    
-    public static IEnumerator InitTropicalPlant10a()
-    {
-        if (tropicalPlant10aObj == null) {
-          // Based on InitElectricalPrefab in VehicleUpgradeExample_BelowZero.cs
-          IPrefabRequest task = UWE.PrefabDatabase.GetPrefabAsync("TropicalPlant10aClone");
-          yield return task;
-          task.TryGetPrefab(out GameObject objTmp);
-          tropicalPlant10aObj = objTmp;
-        } else
-          yield break;
-    }
-    
-    public static IEnumerator InitVoxelShrub()
-    {
-        if (voxelShrubObj == null) {
-          // Based on InitElectricalPrefab in VehicleUpgradeExample_BelowZero.cs
-          IPrefabRequest task = UWE.PrefabDatabase.GetPrefabAsync("VoxelShrubClone");
-          yield return task;
-          task.TryGetPrefab(out GameObject objTmp);
-          voxelShrubObj = objTmp;
-        } else
-          yield break;
-    }
-    
-    public static IEnumerator InitJaffaCup()
-    {
-        if (jaffaCupObj == null) {
-          // Based on InitElectricalPrefab in VehicleUpgradeExample_BelowZero.cs
-          IPrefabRequest task = UWE.PrefabDatabase.GetPrefabAsync("JaffaCupClone");
-          yield return task;
-          task.TryGetPrefab(out GameObject objTmp);
-          jaffaCupObj = objTmp;
-        } else
-          yield break;
-    }
-    
-    public static IEnumerator InitGrubBasket()
-    {
-        if (grubBasketObj == null) {
-          // Based on InitElectricalPrefab in VehicleUpgradeExample_BelowZero.cs
-          IPrefabRequest task = UWE.PrefabDatabase.GetPrefabAsync("GrubBasketClone");
-          yield return task;
-          task.TryGetPrefab(out GameObject objTmp);
-          grubBasketObj = objTmp;
-        } else
-          yield break;
-    }
-    
-    public static IEnumerator InitRedTippedFern()
-    {
-        if (redTippedFernObj == null) {
-          // Based on InitElectricalPrefab in VehicleUpgradeExample_BelowZero.cs
-          IPrefabRequest task = UWE.PrefabDatabase.GetPrefabAsync("RedTippedFernClone");
-          yield return task;
-          task.TryGetPrefab(out GameObject objTmp);
-          redTippedFernObj = objTmp;
-        } else
-          yield break;
-    }
-    
-    public static IEnumerator InitPinkCap()
-    {
-        if (pinkCapObj == null) {
-          // Based on InitElectricalPrefab in VehicleUpgradeExample_BelowZero.cs
-          IPrefabRequest task = UWE.PrefabDatabase.GetPrefabAsync("PinkCapClone");
-          yield return task;
-          task.TryGetPrefab(out GameObject objTmp);
-          pinkCapObj = objTmp;
-        } else
-          yield break;
-    }
-    
-    public static IEnumerator InitSpeckledRattler()
-    {
-        if (speckledRattlerObj == null) {
-          // Based on InitElectricalPrefab in VehicleUpgradeExample_BelowZero.cs
-          IPrefabRequest task = UWE.PrefabDatabase.GetPrefabAsync("SpeckledRattlerClone");
-          yield return task;
-          task.TryGetPrefab(out GameObject objTmp);
-          speckledRattlerObj = objTmp;
-        } else
-          yield break;
-    }
-    
-    public static IEnumerator ModifyPrefabAsync(GameObject obj) {
+    public static IEnumerator ModifyPrefabAsync(GameObject obj) { // called on obj as obj is instantiated from this prefab
       
-      // Wait for other asynchronous initialization to complete
+      // Wait for the PrefabFactory to complete asynchronous initialization
+      
+        yield return CoroutineHost.StartCoroutine(PrefabFactory.ensureInitialized());
 
-        yield return CoroutineHost.StartCoroutine(InitLanternTree());
-        
-        yield return CoroutineHost.StartCoroutine(InitSmallFernPalm());
-        yield return CoroutineHost.StartCoroutine(InitMediumFernPalm());
-        yield return CoroutineHost.StartCoroutine(InitFernPalm());
-        
-        yield return CoroutineHost.StartCoroutine(InitTropicalPlant6b());
-        yield return CoroutineHost.StartCoroutine(InitTropicalPlant10a());
-          
-        yield return CoroutineHost.StartCoroutine(InitVoxelShrub());
-          
-        yield return CoroutineHost.StartCoroutine(InitJaffaCup());
-        yield return CoroutineHost.StartCoroutine(InitGrubBasket());
-        
-        yield return CoroutineHost.StartCoroutine(InitRedTippedFern());
-        
-        yield return CoroutineHost.StartCoroutine(InitPinkCap());      
-        yield return CoroutineHost.StartCoroutine(InitSpeckledRattler());
-      
       // Configure placement rules
       
         ConstructableFlags constructableFlags = ConstructableFlags.Inside | ConstructableFlags.Rotatable | ConstructableFlags.Ground | ConstructableFlags.Submarine;
 
-      // find the object that holds the model:
+      // Find the GameObject that holds the model for the object being instantiated
       
         GameObject planterModel = obj.transform.Find("model").gameObject; // Holds model called "Base_Interior_Planter_Tray_01"
       
-      // add models from the cloned plant objects to the planter object
+      //----------------------------------------------------------------------------------------------------------------
+      // Use PrefabFactory to add models. All prefabs referenced must be listed in PrefabFactory.prefabIdModelNameList
+      //----------------------------------------------------------------------------------------------------------------
       
-        lanternTreeObj.transform.Find("farming_plant_03").parent = planterModel.transform; // there are two farming_plant_03's. The higher-level one has 20 lantern fruits as children. 
-        planterModel.transform.Find("farming_plant_03").position = planterModel.transform.position + new Vector3((float)0,(float)0.3945,(float)0);
+        // Lantern Tree is special - we need to steal its model AND deep copy its FruitPlant component
         
-        smallFernPalmObj.transform.Find("land_plant_middle_03_03").parent = planterModel.transform;
-        planterModel.transform.Find("land_plant_middle_03_03").position = planterModel.transform.position + new Vector3((float)-0.0061,(float)0.3945,(float)0.035);
+          // Get the object
+          GameObject lanternTreeObj = PrefabFactory.InstantiatePrefabInactive("8fa4a413-57fa-47a3-828d-de2255dbce4f");
+          
+          // Steal and re-position its model
+          lanternTreeObj.transform.Find(PrefabFactory.GetModelName("8fa4a413-57fa-47a3-828d-de2255dbce4f")).parent = planterModel.transform;
+          planterModel.transform.Find(PrefabFactory.GetModelName("8fa4a413-57fa-47a3-828d-de2255dbce4f")).position = planterModel.transform.position + new Vector3((float)0,(float)0.3945,(float)0);
+          
+          FruitPlantClone fruitPlant = obj.transform.Find("model").gameObject.AddComponent<FruitPlantClone>(); // See FruitPlantClone for why the built-in FruitPlant can't be used here
+          var oldFruitPlant = lanternTreeObj.GetComponent<FruitPlant>();
+          
+          fruitPlant.fruits = new PickPrefab[oldFruitPlant.fruits.Length];
+          fruitPlant.fruitSpawnInterval = 1f;
+          //fruitPlant.fruitSpawnEnabled = true; 
+          for (int i = 0; i < fruitPlant.fruits.Length; i++) {
+            fruitPlant.fruits[i] = oldFruitPlant.fruits[i];
+          }
+          
+          Object.Destroy(lanternTreeObj);
+      
+        // Small Fern Palm
+        /*model = PrefabFactory.AttachModelFromPrefabTo("6d13066f-95c8-491b-965b-79ac3c67e6aa", planterModel);
+        model.position = planterModel.transform.position + new Vector3((float)-0.0061,(float)0.3945,(float)0.035);*/
         
-        mediumFernPalmObj.transform.Find("land_plant_middle_03_02").parent = planterModel.transform;
-        planterModel.transform.Find("land_plant_middle_03_02").position = planterModel.transform.position + new Vector3((float)0.185,(float)0.3945,(float)-1);
+        // Medium Fern Palm
+        Transform model = PrefabFactory.AttachModelFromPrefabTo("1d6d89dd-3e49-48b7-90e4-b521fbc3d36f", planterModel);
+        model.position = planterModel.transform.position + new Vector3((float)0.185,(float)0.3945,(float)-1);
         
-        fernPalmObj.transform.Find("land_plant_middle_03_01").parent = planterModel.transform;
-        planterModel.transform.Find("land_plant_middle_03_01").position = planterModel.transform.position + new Vector3((float)-0.71,(float)0.3945,(float)-0.481);
+        // Fern Palm
+        model = PrefabFactory.AttachModelFromPrefabTo("523879d5-3241-4a94-8588-cb3b38945119", planterModel);
+        model.position = planterModel.transform.position + new Vector3((float)-0.71,(float)0.3945,(float)-0.481);
         
         // Spindly Tall Plant
-        tropicalPlant6bObj.transform.Find("Tropical_plant_6b").parent = planterModel.transform;
-        planterModel.transform.Find("Tropical_plant_6b").localScale = new Vector3((float)0.3503, (float)0.3503, (float)0.3503);
-        planterModel.transform.Find("Tropical_plant_6b").position = planterModel.transform.position + new Vector3((float)0.509,(float)0.3945,(float)0.611);
+        model = PrefabFactory.AttachModelFromPrefabTo("154a88c1-6c7f-44e4-974e-c52d2f48fa28", planterModel);
+        model.localScale = new Vector3((float)0.3503, (float)0.3503, (float)0.3503);
+        model.position = planterModel.transform.position + new Vector3((float)0.509,(float)0.3945,(float)0.611);
         
         // Vine Fill
-        tropicalPlant10aObj.transform.Find("Tropical_Plant_10a").parent = planterModel.transform;
-        planterModel.transform.Find("Tropical_Plant_10a").localScale = new Vector3((float)0.3122, (float)0.3122, (float)0.3122);
-        planterModel.transform.Find("Tropical_Plant_10a").position = planterModel.transform.position + new Vector3((float)0.053,(float)0.3945,(float)-0.009);
+        model = PrefabFactory.AttachModelFromPrefabTo("75ab087f-9934-4e2a-b025-02fc333a5c99", planterModel);
+        model.localScale = new Vector3((float)0.3122, (float)0.3122, (float)0.3122);
+        model.position = planterModel.transform.position + new Vector3((float)0.053,(float)0.3945,(float)-0.009);
         
-        voxelShrubObj.transform.Find("land_plant_small_01_01").parent = planterModel.transform;
-        planterModel.transform.Find("land_plant_small_01_01").position = planterModel.transform.position + new Vector3((float)-0.4871,(float)0.3945,(float)0.35);
+        // Voxel Shrub
+        model = PrefabFactory.AttachModelFromPrefabTo("28ec1137-da13-44f3-b76d-bac12ab766d1", planterModel);
+        model.position = planterModel.transform.position + new Vector3((float)-0.4871,(float)0.3945,(float)0.35);
         
-        jaffaCupObj.transform.Find("land_plant_middle_05_01").parent = planterModel.transform;
-        planterModel.transform.Find("land_plant_middle_05_01").localScale = new Vector3((float)0.4366, (float)0.4366, (float)0.4366);
-        planterModel.transform.Find("land_plant_middle_05_01").position = planterModel.transform.position + new Vector3((float)1.0079,(float)0.2945,(float)0.627);
+        // Jaffa Cup
+        model = PrefabFactory.AttachModelFromPrefabTo("35056c71-5da7-4e73-be60-3c22c5c9e75c", planterModel);
+        model.localScale = new Vector3((float)0.4366, (float)0.4366, (float)0.4366);
+        model.position = planterModel.transform.position + new Vector3((float)1.0079,(float)0.2945,(float)0.627);
         
-        grubBasketObj.transform.Find("land_plant_middle_02").parent = planterModel.transform;
-        planterModel.transform.Find("land_plant_middle_02").localScale = new Vector3((float)0.4366, (float)0.4366, (float)0.4366);
-        planterModel.transform.Find("land_plant_middle_02").position = planterModel.transform.position + new Vector3((float)0.578,(float)0.3945,(float)-1.028);
+        // Grub Basket
+        model = PrefabFactory.AttachModelFromPrefabTo("28c73640-a713-424a-91c6-2f5d4672aaea", planterModel);
+        model.localScale = new Vector3((float)0.4366, (float)0.4366, (float)0.4366);
+        model.position = planterModel.transform.position + new Vector3((float)0.578,(float)0.3945,(float)-1.028);
         
-        redTippedFernObj.transform.Find("land_plant_middle_06_01_LOD1").parent = planterModel.transform;
-        planterModel.transform.Find("land_plant_middle_06_01_LOD1").localScale = new Vector3((float)0.6, (float)0.6, (float)0.6);
-        planterModel.transform.Find("land_plant_middle_06_01_LOD1").position = planterModel.transform.position + new Vector3((float)-0.578,(float)0.2945,(float)-0.9);
+        // Red-Tipped Fern
+        model = PrefabFactory.AttachModelFromPrefabTo("559fe0c7-1754-40f5-9453-b537900b3ac4", planterModel);
+        model.localScale = new Vector3((float)0.6, (float)0.6, (float)0.6);
+        model.position = planterModel.transform.position + new Vector3((float)-0.578,(float)0.2945,(float)-0.9);
         
-        speckledRattlerObj.transform.Find("land_plant_small_02_02").parent = planterModel.transform; // TRIPLE Speckled Rattler
-        planterModel.transform.Find("land_plant_small_02_02").localScale = new Vector3((float)0.02, (float)0.02, (float)0.02);
-        planterModel.transform.Find("land_plant_small_02_02").position = planterModel.transform.position + new Vector3((float)-0.4871,(float)0.4945,(float)-0.05);
+        // Speckled Rattler
+        model = PrefabFactory.AttachModelFromPrefabTo("98be0944-e0b3-4fba-8f08-ca5d322c22f6", planterModel);
+        model.localScale = new Vector3((float)0.02, (float)0.02, (float)0.02);
+        model.position = planterModel.transform.position + new Vector3((float)-0.4871,(float)0.4945,(float)-0.05);
         
-        pinkCapObj.transform.Find("land_plant_small_03_04").parent = planterModel.transform;
-        planterModel.transform.Find("land_plant_small_03_04").position = planterModel.transform.position + new Vector3((float)0.6871,(float)0.4945,(float)-0.05);
+        // Pink Cap
+        model = PrefabFactory.AttachModelFromPrefabTo("c7faff7e-d9ff-41b4-9782-98d2e09d29c1", planterModel);
+        model.position = planterModel.transform.position + new Vector3((float)0.6871,(float)0.4945,(float)-0.05);
       
       // Make skyApplier act on all of the added models
       
@@ -266,31 +122,24 @@ public static class DegasiPlanter
         
         Animator[] allAnimators = planterModel.GetComponentsInChildren<Animator>();
         foreach (Animator a in allAnimators) {
-          UnityEngine.Object.Destroy(a);
+          UnityEngine.Object.Destroy(a); // This doesn't give an error, but it doesn't work. The old way didn't work either. The objects seem to have no animators.
         }
 
-      // add all components necessary for it to be built:
+      // Add all components necessary for it to be built:
       
         PrefabUtils.AddConstructable(obj, Info.TechType, constructableFlags, planterModel);
       
-      // Remove the Planter object so that seeds can't be planted/grow in the composite object
+      // Remove the Planter component so that seeds can't be planted/grow in the composite object
       
         UnityEngine.Object.Destroy(obj.GetComponent<Planter>());
-      
-      // Copy the FruitPlant object from the Lantern Tree so that the fruits re-spawn when picked
-      
-        FruitPlant fruitPlant = obj.AddComponent<FruitPlant>();
-        var oldFruitPlant = lanternTreeObj.GetComponent<FruitPlant>();
         
-        fruitPlant.fruits = new PickPrefab[oldFruitPlant.fruits.Length];
-        fruitPlant.fruitSpawnInterval = 1f;
-        fruitPlant.fruitSpawnEnabled = true;
-        fruitPlant.version = 91;
-        fruitPlant.timeNextFruit = 1f;
-        fruitPlant.initialized = false;
-        for (int i = 0; i < fruitPlant.fruits.Length; i++) {
-          fruitPlant.fruits[i] = oldFruitPlant.fruits[i];
-        }
+      // Remove the StorageContainer component as it is unnecessary
+      
+        UnityEngine.Object.Destroy(obj.GetComponent<StorageContainer>());
+        UnityEngine.Object.Destroy(obj.transform.Find("slots").gameObject);
+        UnityEngine.Object.Destroy(obj.transform.Find("slots_big").gameObject);
+        UnityEngine.Object.Destroy(obj.transform.Find("StorageRoot").gameObject);
+        UnityEngine.Object.Destroy(obj.transform.Find("grownPlants").gameObject);
       
       // Return
       
@@ -311,7 +160,7 @@ public static class DegasiPlanter
         // modify the cloned model:
         planterClone.ModifyPrefabAsync += ModifyPrefabAsync;
 
-        // assign the created clone model to the prefab itself:
+        // assign the created clone to the prefab itself:
         planterPrefab.SetGameObject(planterClone);
           // Sets the internal variable GameObject planterPrefab._prefab to planterClone
           // Sets the internal variable PrefabFactoryAsync planterPrefab.Prefab to a function taking an argument obj and returning SyncPrefab(obj, prefab) where
@@ -322,6 +171,8 @@ public static class DegasiPlanter
 
         // assign it to the correct tab in the builder tool:
         planterPrefab.SetPdaGroupCategory(TechGroup.InteriorModules, TechCategory.InteriorModule);
+        
+        planterPrefab.SetUnlock(TechType.PlanterBox);
 
         // set recipe:
         planterPrefab.SetRecipe(new RecipeData(new Ingredient(TechType.Titanium, 4))); // same as default recipe

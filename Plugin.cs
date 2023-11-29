@@ -28,25 +28,6 @@ public class Plugin : BaseUnityPlugin
     
     private void InitializeBuildables()
     {
-        SmallFernPalmClone.Register();
-        MediumFernPalmClone.Register();
-        FernPalmClone.Register();
-        
-        LanternTreeClone.Register();
-        
-        TropicalPlant6bClone.Register(); // Spindly tall plant. Not a default growable.
-        TropicalPlant10aClone.Register(); // Vine fill. Not a default growable.
-        
-        VoxelShrubClone.Register();
-        
-        JaffaCupClone.Register();
-        GrubBasketClone.Register();
-        
-        SpeckledRattlerClone.Register();
-        PinkCapClone.Register();
-        
-        RedTippedFernClone.Register(); // "LandPlant1" in DecorationsMod. Not a default growable.
-        
         DegasiPlanter.Register(); // Uses Planter as core as it has the right origin
     }
 }
