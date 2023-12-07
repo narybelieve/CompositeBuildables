@@ -135,6 +135,9 @@ public static class PrefabFactory
           "08c1c77c-6ca3-49d1-9e4f-608e87d6f90c", "land_plant_middle_05_02",
           // Small. No Stem
           "8e4e640e-4c04-4168-a0cc-4ec86b709345", "land_plant_middle_05_03",
+          
+          // Spore. No model - used for MushroomTerrariumSmall only
+          "ff727b98-8d85-416a-9ee7-4beda86d2ba2", "",
         
         // Grub Basket
         "28c73640-a713-424a-91c6-2f5d4672aaea", "land_plant_middle_02",
