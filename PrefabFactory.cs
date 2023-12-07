@@ -29,6 +29,85 @@ public static class PrefabFactory
       //========================================================================================================
     
       //-----------------------------------------------------------------------
+      // LAB PROPS
+      //-----------------------------------------------------------------------
+      
+        // Counter
+        "42eae67f-f31a-45a0-95bf-27e189de65a0", "biodome_lab_counter_01", // ? Prefab seems to be named biodome_lab_counter_01_cab1
+        
+        // Tubular Laboratory Shelves
+        "a36047b0-1533-4718-8879-d6ba9229c978", "biodome_lab_tube_01",
+        
+        // Rectangular Laboratory Shelves
+        "33acd899-72fe-4a98-85f9-b6811974fbeb", "biodome_lab_shelf_01", 
+            // Subobjects:
+            //  "biodome_lab_shelf_01" = the shelf
+            //  "biodome_lab_shelf_01_thing" = the vertical arm thing
+            //  "biodome_lab_shelf_01_thing_glass" = some barely visible glass near the arm thing
+            // To make this into a shelf with ends, place two of the lab_shelf_01 items at right angles at the ends and remove their "thing" models
+        
+        // Rectangular Laboratory Shelves
+        "33acd899-72fe-4a98-85f9-b6811974fbeb", "biodome_lab_shelf_01", 
+        
+        // Robotic Arm? Decorationsmod uses its own asset
+        "68e7dcd8-fe09-4dac-b966-85463c3c58af", "biodome_Robot_Arm",
+        
+        // Microscope
+        "2cee55bc-6136-47c5-a1ed-14c8f3203856", "discovery_lab_props_01", 
+        
+        // Fluid Analyzer
+        "9c5f22de-5049-48bb-ad1e-0d78c894210e", "discovery_lab_props_02", 
+        
+        // Sample Analyzer
+        "3fd9050b-4baf-4a78-a883-e774c648887c", "discovery_lab_props_03", 
+        
+        // Cylindrical Test Tube (named "Cylindrical sample flask" in Decorations mod)
+        "7f601dd4-0645-414d-bb62-5b0b62985836", "biodome_lab_containers_tube_01",
+        
+        // Cylindrical Bell Jar (named "Inverted cylindrical sample container" in Decorations mod)
+        "a227d6b6-d64c-4bf0-b919-2db02d67d037", "biodome_lab_containers_tube_02",
+        
+        // Large Square Jar with Lid (named "Large sample flask" in Decorations mod)
+        "e7f9c5e7-3906-4efd-b239-28783bce17a5", "biodome_lab_containers_close_01",
+        
+        // Small Square Jar with Lid  (named "Small sample flask" in Decorations mod)
+        "e3e00261-92fc-4f52-bad2-4f0e5802a43d", "biodome_lab_containers_close_02",
+        
+        // Clipboard
+        "a7519acf-6dec-429e-82ed-bbcf7a616c50", "docking_clerical_clipboard1", 
+        
+        // Hatching Enzymes
+        "fab9bc63-1916-4434-a9c6-231f421ffbb5", "model", // 
+        
+        // Polyaniline
+        "7e164f67-f4e7-41fc-98a5-7a84ccaa1d09", "Polyaniline",
+        
+        // Bleach
+        "fbfacd7b-32a8-4065-8c25-b0a703f2683b", "model",
+        
+        // Hydrochloric Acid
+        "74912c22-a383-48c7-8e9e-34b515c6aebb", "Hydrochloric_acid",
+        
+        // Benzene
+        "986b31ea-3c9d-498c-9f38-2af8ffe86ed7", "Benzene",
+        
+        // Lubricant
+        "96b1b863-2ff7-451b-aa38-8b3a06e72d63", "model",
+        
+      //-----------------------------------------------------------------------
+      // SMALL PLANTER POTS
+      //-----------------------------------------------------------------------
+        
+        // Basic Plant Pot
+        "c59c1abc-4e00-4480-8d8d-f337a81ba2d6", "model", 
+        
+        // Composite Plant Pot
+        "5c8cb04b-9f30-49e7-8687-0cbb338fc7fa", "model", 
+        
+        // Chic Plant Pot 
+        "0fbf203a-a940-4b6e-ac63-0fe2737d84c2", "model",
+      
+      //-----------------------------------------------------------------------
       // LARGE PLANTS (TREES)
       //-----------------------------------------------------------------------
       

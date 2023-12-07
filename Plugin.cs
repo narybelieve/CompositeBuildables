@@ -32,5 +32,6 @@ public class Plugin : BaseUnityPlugin
         StartCoroutine(PrefabFactory.ensureInitialized());
         
         DegasiPlanter.Register();
+        ScienceBench1.Register();
     }
 }
