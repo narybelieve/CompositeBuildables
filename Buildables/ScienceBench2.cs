@@ -16,10 +16,10 @@ using System.Collections; // IEnumerator
 
 namespace CompositeBuildables;
 
-public static class ScienceBench1
+public static class ScienceBench2
 {
     public static PrefabInfo Info { get; } = PrefabInfo
-        .WithTechType("ScienceBench1", "Science Bench 1", "Bench with microscope.");
+        .WithTechType("ScienceBench2", "Science Bench 2", "Bench with sample analyzer.");
         // set the icon to that of the vanilla locker:
         //.WithIcon(SpriteManager.Get(TechType.PlanterBox));
     
@@ -41,34 +41,24 @@ public static class ScienceBench1
       // Use PrefabFactory to add models. All prefabs referenced must be listed in PrefabFactory.prefabIdModelNameList
       //----------------------------------------------------------------------------------------------------------------
       
-        // Microscope
-        Transform model = PrefabFactory.AttachModelFromPrefabTo("2cee55bc-6136-47c5-a1ed-14c8f3203856", counterModel.transform);
-        model.position = counterModel.transform.position + new Vector3((float)0,(float)1.0203,(float)-0.1);
+        // Sample Analyzer
+        Transform model = PrefabFactory.AttachModelFromPrefabTo("3fd9050b-4baf-4a78-a883-e774c648887c", counterModel.transform);
+        model.position = counterModel.transform.position + new Vector3((float)0.5,(float)1.0203,(float)-0.1);
         
         // Cylindrical Test Tube
         model = PrefabFactory.AttachModelFromPrefabTo("7f601dd4-0645-414d-bb62-5b0b62985836", counterModel.transform); 
         model.rotation = Quaternion.Euler(0, -45, 0);
-        model.position = counterModel.transform.position + new Vector3((float)-0.58,(float)1.0203,(float)0.1);
+        model.position = counterModel.transform.position + new Vector3((float)-0.28,(float)1.0203,(float)0);
         
-        // Large Square Jar with Lid
-        model = PrefabFactory.AttachModelFromPrefabTo("e7f9c5e7-3906-4efd-b239-28783bce17a5", counterModel.transform);
+        // Cylindrical Test Tube 2
+        model = PrefabFactory.AttachModelFromPrefabTo("7f601dd4-0645-414d-bb62-5b0b62985836", counterModel.transform);
         model.rotation = Quaternion.Euler(0, -40, 0);
-        model.position = counterModel.transform.position + new Vector3((float)-0.77,(float)1.0203,(float)-0.1);
-        
-        // Small Square Jar with Lid
-        model = PrefabFactory.AttachModelFromPrefabTo("e3e00261-92fc-4f52-bad2-4f0e5802a43d", counterModel.transform);
-        model.rotation = Quaternion.Euler(0, -40, 0);
-        model.position = counterModel.transform.position + new Vector3((float)-0.97,(float)1.0203,(float)0.12);
+        model.position = counterModel.transform.position + new Vector3((float)-0.17,(float)1.0203,(float)-0.2);
         
         // Clipboard
         model = PrefabFactory.AttachModelFromPrefabTo("a7519acf-6dec-429e-82ed-bbcf7a616c50", counterModel.transform);
-        model.rotation = Quaternion.Euler(0, 235, 0) * Quaternion.Euler(-90, 0, 0);
-        model.position = counterModel.transform.position + new Vector3((float)0.75,(float)1.0203,(float)0.1);
-        
-        // Hatching Enzymes
-        model = PrefabFactory.AttachModelFromPrefabTo("fab9bc63-1916-4434-a9c6-231f421ffbb5", counterModel.transform); 
-        model.rotation = Quaternion.Euler(0, -110, 0) * Quaternion.Euler(0, -20, 0);
-        model.position = counterModel.transform.position + new Vector3((float)0.5,(float)1.0203,(float)-0.25);
+        model.rotation = Quaternion.Euler(0, 280, 0) * Quaternion.Euler(-90, 0, 0);
+        model.position = counterModel.transform.position + new Vector3((float)-0.75,(float)1.0203,(float)0.1);
       
       // Make skyApplier act on all of the added models
       

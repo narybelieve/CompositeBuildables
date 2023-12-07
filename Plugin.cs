@@ -33,5 +33,6 @@ public class Plugin : BaseUnityPlugin
         
         DegasiPlanter.Register();
         ScienceBench1.Register();
+        ScienceBench2.Register();
     }
 }

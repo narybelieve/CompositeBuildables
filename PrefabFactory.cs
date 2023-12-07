@@ -218,6 +218,10 @@ public static class PrefabFactory
       return prefabIdModelNameList[2*GetIndex(prefabID)+1]; 
     }
     
+    public static GameObject GetPrefabGameObject(string prefabID) {
+      return prefabObjList[GetIndex(prefabID)];
+    }
+    
     public static GameObject InstantiatePrefabInactive(string prefabID) {
       // Find the prefab
       var prefab = prefabObjList[GetIndex(prefabID)];
