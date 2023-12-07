@@ -20,7 +20,7 @@ public static class DegasiPlanter
 {
     public static PrefabInfo Info { get; } = PrefabInfo
         .WithTechType("DegasiPlanter", "Degasi Planter", "Bart Torgal's planter from Degasi Base 1-a.")
-        // set the icon to that of the vanilla locker:
+        // set the icon to that of the vanilla planter
         .WithIcon(SpriteManager.Get(TechType.PlanterBox));
     
     public static IEnumerator ModifyPrefabAsync(GameObject obj) { // called on obj as obj is instantiated from this prefab
@@ -31,7 +31,7 @@ public static class DegasiPlanter
 
       // Configure placement rules
       
-        ConstructableFlags constructableFlags = ConstructableFlags.Inside | ConstructableFlags.Rotatable | ConstructableFlags.Ground | ConstructableFlags.Submarine;
+        ConstructableFlags constructableFlags = ConstructableFlags.Inside | ConstructableFlags.Rotatable | ConstructableFlags.Ground;
 
       // Find the GameObject that holds the model for the object being instantiated
       
@@ -48,7 +48,18 @@ public static class DegasiPlanter
           
           // Steal and re-position its model
           lanternTreeObj.transform.Find(PrefabFactory.GetModelName("8fa4a413-57fa-47a3-828d-de2255dbce4f")).parent = planterModel.transform;
-          planterModel.transform.Find(PrefabFactory.GetModelName("8fa4a413-57fa-47a3-828d-de2255dbce4f")).position = planterModel.transform.position + new Vector3((float)0,(float)0.3945,(float)0);
+          Transform lanternTreeModel = planterModel.transform.Find(PrefabFactory.GetModelName("8fa4a413-57fa-47a3-828d-de2255dbce4f"));
+          lanternTreeModel.position = planterModel.transform.position + new Vector3((float)0,(float)0.3945,(float)0);
+            // Fruits 15--20 cause problems in the Cyclops: their SphereColliders are too high up and send it flying. 
+            // The solution is to remove the SphereColliders for these 5 fruits. It makes them un-pickable, but ~1/2 of them are out of reach anyway because this is an overworld-sized Lantern Tree
+            UnityEngine.Object.Destroy(lanternTreeModel.Find("Fruit_15").GetComponent<SphereCollider>());
+            UnityEngine.Object.Destroy(lanternTreeModel.Find("Fruit_16").GetComponent<SphereCollider>());
+            UnityEngine.Object.Destroy(lanternTreeModel.Find("Fruit_17").GetComponent<SphereCollider>());
+            UnityEngine.Object.Destroy(lanternTreeModel.Find("Fruit_18").GetComponent<SphereCollider>());
+            UnityEngine.Object.Destroy(lanternTreeModel.Find("Fruit_19").GetComponent<SphereCollider>());
+            UnityEngine.Object.Destroy(lanternTreeModel.Find("Fruit_20").GetComponent<SphereCollider>());
+            
+            
           
           FruitPlantClone fruitPlant = obj.transform.Find("model").gameObject.AddComponent<FruitPlantClone>(); // See FruitPlantClone for why the built-in FruitPlant can't be used here
           var oldFruitPlant = lanternTreeObj.GetComponent<FruitPlant>();
@@ -60,57 +71,62 @@ public static class DegasiPlanter
             fruitPlant.fruits[i] = oldFruitPlant.fruits[i];
           }
           
-          Object.Destroy(lanternTreeObj);
+          //Object.Destroy(lanternTreeObj);
       
         // Small Fern Palm
-        /*model = PrefabFactory.AttachModelFromPrefabTo("6d13066f-95c8-491b-965b-79ac3c67e6aa", planterModel);
+        /*model = PrefabFactory.AttachModelFromPrefabTo("6d13066f-95c8-491b-965b-79ac3c67e6aa", planterModel.transform);
         model.position = planterModel.transform.position + new Vector3((float)-0.0061,(float)0.3945,(float)0.035);*/
         
         // Medium Fern Palm
-        Transform model = PrefabFactory.AttachModelFromPrefabTo("1d6d89dd-3e49-48b7-90e4-b521fbc3d36f", planterModel);
+        Transform model = PrefabFactory.AttachModelFromPrefabTo("1d6d89dd-3e49-48b7-90e4-b521fbc3d36f", planterModel.transform);
         model.position = planterModel.transform.position + new Vector3((float)0.185,(float)0.3945,(float)-1);
         
         // Fern Palm
-        model = PrefabFactory.AttachModelFromPrefabTo("523879d5-3241-4a94-8588-cb3b38945119", planterModel);
+        model = PrefabFactory.AttachModelFromPrefabTo("523879d5-3241-4a94-8588-cb3b38945119", planterModel.transform);
         model.position = planterModel.transform.position + new Vector3((float)-0.71,(float)0.3945,(float)-0.481);
         
         // Spindly Tall Plant
-        model = PrefabFactory.AttachModelFromPrefabTo("154a88c1-6c7f-44e4-974e-c52d2f48fa28", planterModel);
+        model = PrefabFactory.AttachModelFromPrefabTo("154a88c1-6c7f-44e4-974e-c52d2f48fa28", planterModel.transform);
         model.localScale = new Vector3((float)0.3503, (float)0.3503, (float)0.3503);
         model.position = planterModel.transform.position + new Vector3((float)0.509,(float)0.3945,(float)0.611);
         
         // Vine Fill
-        model = PrefabFactory.AttachModelFromPrefabTo("75ab087f-9934-4e2a-b025-02fc333a5c99", planterModel);
+        model = PrefabFactory.AttachModelFromPrefabTo("75ab087f-9934-4e2a-b025-02fc333a5c99", planterModel.transform);
         model.localScale = new Vector3((float)0.3122, (float)0.3122, (float)0.3122);
         model.position = planterModel.transform.position + new Vector3((float)0.053,(float)0.3945,(float)-0.009);
         
         // Voxel Shrub
-        model = PrefabFactory.AttachModelFromPrefabTo("28ec1137-da13-44f3-b76d-bac12ab766d1", planterModel);
+        model = PrefabFactory.AttachModelFromPrefabTo("28ec1137-da13-44f3-b76d-bac12ab766d1", planterModel.transform);
         model.position = planterModel.transform.position + new Vector3((float)-0.4871,(float)0.3945,(float)0.35);
+        model.GetComponent<Renderer>().material.SetColor("_Scale", new Color(0f, 0f, 0f, 0f));
         
         // Jaffa Cup
-        model = PrefabFactory.AttachModelFromPrefabTo("35056c71-5da7-4e73-be60-3c22c5c9e75c", planterModel);
+        model = PrefabFactory.AttachModelFromPrefabTo("35056c71-5da7-4e73-be60-3c22c5c9e75c", planterModel.transform);
         model.localScale = new Vector3((float)0.4366, (float)0.4366, (float)0.4366);
         model.position = planterModel.transform.position + new Vector3((float)1.0079,(float)0.2945,(float)0.627);
         
         // Grub Basket
-        model = PrefabFactory.AttachModelFromPrefabTo("28c73640-a713-424a-91c6-2f5d4672aaea", planterModel);
+        model = PrefabFactory.AttachModelFromPrefabTo("28c73640-a713-424a-91c6-2f5d4672aaea", planterModel.transform);
         model.localScale = new Vector3((float)0.4366, (float)0.4366, (float)0.4366);
         model.position = planterModel.transform.position + new Vector3((float)0.578,(float)0.3945,(float)-1.028);
+        model.GetComponent<Renderer>().material.SetColor("_Scale", new Color(0f, 0f, 0f, 0f));
         
         // Red-Tipped Fern
-        model = PrefabFactory.AttachModelFromPrefabTo("559fe0c7-1754-40f5-9453-b537900b3ac4", planterModel);
+        model = PrefabFactory.AttachModelFromPrefabTo("559fe0c7-1754-40f5-9453-b537900b3ac4", planterModel.transform);
         model.localScale = new Vector3((float)0.6, (float)0.6, (float)0.6);
         model.position = planterModel.transform.position + new Vector3((float)-0.578,(float)0.2945,(float)-0.9);
+        model.GetComponent<Renderer>().material.SetColor("_Scale", new Color(0f, 0f, 0f, 0f));
         
         // Speckled Rattler
-        model = PrefabFactory.AttachModelFromPrefabTo("98be0944-e0b3-4fba-8f08-ca5d322c22f6", planterModel);
+        model = PrefabFactory.AttachModelFromPrefabTo("98be0944-e0b3-4fba-8f08-ca5d322c22f6", planterModel.transform);
         model.localScale = new Vector3((float)0.02, (float)0.02, (float)0.02);
         model.position = planterModel.transform.position + new Vector3((float)-0.4871,(float)0.4945,(float)-0.05);
+        model.GetComponent<Renderer>().material.SetColor("_Scale", new Color(0f, 0f, 0f, 0f));
         
         // Pink Cap
-        model = PrefabFactory.AttachModelFromPrefabTo("c7faff7e-d9ff-41b4-9782-98d2e09d29c1", planterModel);
+        model = PrefabFactory.AttachModelFromPrefabTo("c7faff7e-d9ff-41b4-9782-98d2e09d29c1", planterModel.transform);
         model.position = planterModel.transform.position + new Vector3((float)0.6871,(float)0.4945,(float)-0.05);
+        model.GetComponent<Renderer>().material.SetColor("_Scale", new Color(0f, 0f, 0f, 0f));
       
       // Make skyApplier act on all of the added models
       

@@ -27,7 +27,7 @@ public static class PrefabFactory
       //  -> Even-indexed items: prefab ID (see https://github.com/SubnauticaModding/Nautilus/blob/master/Nautilus/Documentation/resources/SN1-PrefabPaths.json), 
       //  -> Odd-indexed items: corresponding model name
       //========================================================================================================
-      
+    
       //-----------------------------------------------------------------------
       // LARGE PLANTS (TREES)
       //-----------------------------------------------------------------------
@@ -49,7 +49,13 @@ public static class PrefabFactory
       //-----------------------------------------------------------------------
           
         // Jaffa Cup
-        "35056c71-5da7-4e73-be60-3c22c5c9e75c", "land_plant_middle_05_01",
+        
+          // Large
+          "35056c71-5da7-4e73-be60-3c22c5c9e75c", "land_plant_middle_05_01",
+          // Medium. No Stem
+          "08c1c77c-6ca3-49d1-9e4f-608e87d6f90c", "land_plant_middle_05_02",
+          // Small. No Stem
+          "8e4e640e-4c04-4168-a0cc-4ec86b709345", "land_plant_middle_05_03",
         
         // Grub Basket
         "28c73640-a713-424a-91c6-2f5d4672aaea", "land_plant_middle_02",
@@ -58,7 +64,7 @@ public static class PrefabFactory
       // SMALL PLANTS
       //-----------------------------------------------------------------------
       
-        // Speckled Rattler
+        // Speckled Rattler. Note that these models are huge and need a scale of ~0.02
         
           // Single
           "28818d8a-5e50-41f0-8e14-44cb89a0b611", "land_plant_small_02_01",
@@ -98,21 +104,29 @@ public static class PrefabFactory
         "154a88c1-6c7f-44e4-974e-c52d2f48fa28", "Tropical_plant_6b",
         
         // Vine Fill
-        "75ab087f-9934-4e2a-b025-02fc333a5c99", "Tropical_Plant_10a"
+        "75ab087f-9934-4e2a-b025-02fc333a5c99", "Tropical_Plant_10a",
+        
+        // Land Tree 1
+        "1cc51be0-8ea9-4730-936f-23b562a9256f", "Land_tree_01_LOD0" // This model has other LODs, but this is probably because they are everywhere on the floating island. We can probably get away with just this one
     };
     private static List<GameObject> prefabObjList = new List<GameObject>();
     
     public static IEnumerator ensureInitialized() {
-      for(int i = 0; i < prefabIdModelNameList.Count; i = i + 2) { // step by 2 as we are stepping through a flattned list of pairs (prefab ID, model name)
-        string prefabID = prefabIdModelNameList[i];
-        IPrefabRequest task = PrefabDatabase.GetPrefabAsync(prefabID);
-        Debug.Log("ensureInitialized with prefabID = " + prefabID);
-        yield return task;
-        if(task.TryGetPrefab(out GameObject objTmp)) {
-          Debug.Log("TryGetPrefab succeeded for " + prefabID);
-          prefabObjList.Add(objTmp);
-        } else {
-          Debug.Log("TryGetPrefab failed for " + prefabID);
+      if(prefabObjList.Count*2 < prefabIdModelNameList.Count) { // list not constructed
+        for(int i = 0; i < prefabIdModelNameList.Count; i = i + 2) { // step by 2 as we are stepping through a flattned list of pairs (prefab ID, model name)
+          string prefabID = prefabIdModelNameList[i];
+          IPrefabRequest task = PrefabDatabase.GetPrefabAsync(prefabID);
+          Debug.Log("CompositeBuildables.PrefabFactory: ensureInitialized with prefabID = " + prefabID);
+          yield return task;
+          if(task.TryGetPrefab(out GameObject objTmp)) {
+            Debug.Log("CompositeBuildables.PrefabFactory: TryGetPrefab succeeded for " + prefabID);
+            prefabObjList.Add(objTmp);
+            foreach (Transform child in objTmp.transform) {
+              Debug.Log("CompositeBuildables.PrefabFactory: \tPrefab " + prefabID + ".transform contains a model called " + child.name);
+            }
+          } else {
+            Debug.Log("CompositeBuildables.PrefabFactory: TryGetPrefab failed for " + prefabID);
+          }
         }
       }
     }
@@ -139,11 +153,12 @@ public static class PrefabFactory
       return result;
     }
     
-    public static Transform AttachModelFromPrefabTo(string prefabID, GameObject to) { // returns the model which was moved
+    public static Transform AttachModelFromPrefabTo(string prefabID, Transform to) { // returns the model which was moved
       GameObject victim = InstantiatePrefabInactive(prefabID); // gameObject we will harvest for its model and then destroy
-      victim.transform.Find(prefabIdModelNameList[2*GetIndex(prefabID)+1]).parent = to.transform;
+      Transform result = victim.transform.Find(prefabIdModelNameList[2*GetIndex(prefabID)+1]);
+      result.parent = to;
       UnityEngine.Object.Destroy(victim);
-      return to.transform.Find(prefabIdModelNameList[2*GetIndex(prefabID)+1]); // returns the model which was moved
+      return result; //to.transform.Find(prefabIdModelNameList[2*GetIndex(prefabID)+1]); // returns the model which was moved
     }
     
 }

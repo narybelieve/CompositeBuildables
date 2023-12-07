@@ -2,6 +2,7 @@
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+using UnityEngine; // Debug.Log
 
 namespace CompositeBuildables;
 
@@ -28,6 +29,8 @@ public class Plugin : BaseUnityPlugin
     
     private void InitializeBuildables()
     {
-        DegasiPlanter.Register(); // Uses Planter as core as it has the right origin
+        StartCoroutine(PrefabFactory.ensureInitialized());
+        
+        DegasiPlanter.Register();
     }
 }
