@@ -3,6 +3,7 @@ using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
+using Nautilus.Handlers; // CraftDataHandler
 using Nautilus.Extensions;
 using UnityEngine;
 using UnityEditor;
@@ -13,15 +14,18 @@ using Nautilus.Utility;
 using UWE;
 
 using System.Collections; // IEnumerator
+using System.IO; // Path
+using System.Reflection; // Assembly
 
 namespace CompositeBuildables;
 
 public static class ScienceBench2
 {
     public static PrefabInfo Info { get; } = PrefabInfo
-        .WithTechType("ScienceBench2", "Science Bench 2", "Bench with sample analyzer.");
-        // set the icon to that of the vanilla locker:
-        //.WithIcon(SpriteManager.Get(TechType.PlanterBox));
+        .WithTechType("ScienceBench2", "Science Bench 2", "Bench with sample analyzer.")
+        .WithIcon(ImageUtils.LoadSpriteFromFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Assets", "ScienceBench2.png")));
+
+    public static bool registered = false;
     
     public static IEnumerator ModifyPrefabAsync(GameObject obj) { // called on obj as obj is instantiated from this prefab
       
@@ -75,7 +79,32 @@ public static class ScienceBench2
         yield return obj;
     }
     
-    public static void Register()
+    public static void UpdateRecipe(Config config)
+    {
+      if(!registered) return;
+      
+      switch (config.RecipeComplexity) {
+        case RecipeComplexityEnum.Simple:
+          CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
+            new Ingredient(TechType.Titanium, 2)
+          )); 
+          break;
+        case RecipeComplexityEnum.Fair:
+          CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
+            new Ingredient(TechType.Titanium, 3), 
+            new Ingredient(TechType.Glass, 1)
+          )); 
+          break;
+        case RecipeComplexityEnum.Complex:
+          CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
+            new Ingredient(TechType.Titanium, 4), // Bench + Sample Analyzer + Clipboard
+            new Ingredient(TechType.Glass, 3) // Sample Analyzeri + 2 Cylindrical Test Tube 
+          )); 
+          break;
+      }
+    }
+    
+    public static void Register(Config config)
     {
         // create prefab:
         CustomPrefab planterPrefab = new CustomPrefab(Info);
@@ -103,10 +132,11 @@ public static class ScienceBench2
         
         planterPrefab.SetUnlock(TechType.StarshipDesk);
 
-        // set recipe:
-        planterPrefab.SetRecipe(new RecipeData(new Ingredient(TechType.Titanium, 2))); // same as default recipe
-
         // finally, register it into the game:
         planterPrefab.Register();
+        registered = true;
+        
+        // Set Recipe Data
+        UpdateRecipe(config);
     }
 }

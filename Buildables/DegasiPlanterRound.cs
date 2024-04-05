@@ -19,12 +19,12 @@ using System.Reflection; // Assembly
 
 namespace CompositeBuildables;
 
-public static class DegasiPlanter
+public static class DegasiPlanterRound
 {
     public static PrefabInfo Info { get; } = PrefabInfo
-        .WithTechType("DegasiPlanter", "Degasi Planter", "Bart Torgal's planter from Degasi Base 1-a.")
-        .WithIcon(ImageUtils.LoadSpriteFromFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Assets", "DegasiPlanter.png")));
-        
+        .WithTechType("DegasiPlanterRound", "Degasi Planter (Round)", "Bart Torgal's planter from Degasi Base 1-a.")
+        .WithIcon(ImageUtils.LoadSpriteFromFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Assets", "DegasiPlanterRound.png")));
+    
     public static bool registered = false;
     
     public static IEnumerator ModifyPrefabAsync(GameObject obj) { // called on obj as obj is instantiated from this prefab
@@ -43,8 +43,25 @@ public static class DegasiPlanter
 
       // Find the GameObject that holds the model for the object being instantiated
       
-        GameObject planterModel = obj.transform.Find("model").gameObject; // Holds model called "Base_Interior_Planter_Tray_01"
+        GameObject planterModel = obj.transform.Find("model").gameObject; // Holds model called "Base_interior_Planter_Pot_02"
+      
+      // Stretch the Pot model
+      
+        planterModel.transform.Find("Base_interior_Planter_Pot_02").localScale = new Vector3((float)3,(float)3,(float)1);
         planterModel.transform.Rotate(new Vector3(0, 180, 0), Space.World); // rotate so that the "Front" faces the player while placing
+        
+        // Stretch the Collider as well for consistency
+        BoxCollider box = obj.transform.Find("Collider").GetComponent<BoxCollider>(); // This one is used for constructed objects
+        Vector3 size = box.size;
+        size.x *= 3;
+        size.z *= 3;
+        box.size = size;
+        
+        ConstructableBounds cb = obj.GetComponent<ConstructableBounds>(); // This one is used for the pre-construction hologram
+        size = cb.bounds.size;
+        size.x *= 3;
+        size.z *= 3;
+        cb.bounds.size = size;
       
       //----------------------------------------------------------------------------------------------------------------
       // Use PrefabFactory to add models. All prefabs referenced must be listed in PrefabFactory.prefabIdModelNameList
@@ -56,8 +73,8 @@ public static class DegasiPlanter
           GameObject lanternTreeObj = PrefabFactory.InstantiatePrefabInactive("8fa4a413-57fa-47a3-828d-de2255dbce4f");
           
           // Steal and re-position its model
-          Transform lanternTreeModel = lanternTreeObj.transform.Find(PrefabFactory.GetModelName("8fa4a413-57fa-47a3-828d-de2255dbce4f"));
-          lanternTreeModel.parent = planterModel.transform;
+          lanternTreeObj.transform.Find(PrefabFactory.GetModelName("8fa4a413-57fa-47a3-828d-de2255dbce4f")).parent = planterModel.transform;
+          Transform lanternTreeModel = planterModel.transform.Find(PrefabFactory.GetModelName("8fa4a413-57fa-47a3-828d-de2255dbce4f"));
           lanternTreeModel.localPosition = new Vector3((float)0,(float)0.3757,(float)0);
             // Fruits 15--20 cause problems in the Cyclops: their SphereColliders are too high up and send it flying. 
             // The solution is to remove the SphereColliders for these 5 fruits. It makes them un-pickable, but ~1/2 of them are out of reach anyway because this is an overworld-sized Lantern Tree
@@ -80,7 +97,7 @@ public static class DegasiPlanter
             fruitPlant.fruits[i] = oldFruitPlant.fruits[i];
           }
           
-          Object.Destroy(lanternTreeObj);
+          //Object.Destroy(lanternTreeObj);
       
         // Small Fern Palm
         /*model = PrefabFactory.AttachModelFromPrefabTo("6d13066f-95c8-491b-965b-79ac3c67e6aa", planterModel.transform);
@@ -89,7 +106,7 @@ public static class DegasiPlanter
         // Medium Fern Palm
         Transform model = PrefabFactory.AttachModelFromPrefabTo("1d6d89dd-3e49-48b7-90e4-b521fbc3d36f", planterModel.transform);
         model.Rotate(new Vector3(0, 180, 0), Space.World);
-        model.localPosition = new Vector3((float)0.185,(float)0.3757,(float)-1);
+        model.localPosition = new Vector3((float)0.185,(float)0.3757,(float)-0.9);
         
         // Fern Palm
         model = PrefabFactory.AttachModelFromPrefabTo("523879d5-3241-4a94-8588-cb3b38945119", planterModel.transform);
@@ -100,13 +117,13 @@ public static class DegasiPlanter
         model = PrefabFactory.AttachModelFromPrefabTo("154a88c1-6c7f-44e4-974e-c52d2f48fa28", planterModel.transform);
         model.localScale = new Vector3((float)0.3503, (float)0.3503, (float)0.3503);
         model.Rotate(new Vector3(0, 180, 0), Space.World);
-        model.localPosition = new Vector3((float)0.509,(float)0.3757,(float)0.611);
+        model.localPosition = new Vector3((float)0.309,(float)0.2757,(float)0.611);
         
         // Vine Fill
         model = PrefabFactory.AttachModelFromPrefabTo("75ab087f-9934-4e2a-b025-02fc333a5c99", planterModel.transform);
-        model.localScale = new Vector3((float)0.3122, (float)0.3122, (float)0.3122);
+        model.localScale = new Vector3((float)0.25, (float)0.25, (float)0.25);
         model.Rotate(new Vector3(0, 180, 0), Space.World);
-        model.localPosition = new Vector3((float)0.053,(float)0.3757,(float)-0.009);
+        model.localPosition = new Vector3((float)0.053,(float)0.2757,(float)-0.009);
         
         // Voxel Shrub
         model = PrefabFactory.AttachModelFromPrefabTo("28ec1137-da13-44f3-b76d-bac12ab766d1", planterModel.transform);
@@ -117,20 +134,20 @@ public static class DegasiPlanter
         // Jaffa Cup
         model = PrefabFactory.AttachModelFromPrefabTo("35056c71-5da7-4e73-be60-3c22c5c9e75c", planterModel.transform);
         model.localScale = new Vector3((float)0.4366, (float)0.4366, (float)0.4366);
-        model.localPosition = new Vector3((float)1.0079,(float)0.2805,(float)0.627);
+        model.localPosition = new Vector3((float)0.8,(float)0.2805,(float)0.427);
         model.Rotate(new Vector3(0, 180, 0), Space.World);
         
         // Grub Basket
         model = PrefabFactory.AttachModelFromPrefabTo("28c73640-a713-424a-91c6-2f5d4672aaea", planterModel.transform);
         model.localScale = new Vector3((float)0.4366, (float)0.4366, (float)0.4366);
-        model.localPosition = new Vector3((float)0.578,(float)0.3757,(float)-1.028);
+        model.localPosition = new Vector3((float)0.578,(float)0.3757,(float)-0.628);
         model.Rotate(new Vector3(0, 180, 0), Space.World);
         model.GetComponent<Renderer>().material.SetColor("_Scale", new Color(0f, 0f, 0f, 0f));
         
         // Red-Tipped Fern
         model = PrefabFactory.AttachModelFromPrefabTo("559fe0c7-1754-40f5-9453-b537900b3ac4", planterModel.transform);
         model.localScale = new Vector3((float)0.6, (float)0.6, (float)0.6);
-        model.localPosition = new Vector3((float)-0.578,(float)0.2805,(float)-0.9);
+        model.localPosition = new Vector3((float)-0.378,(float)0.2805,(float)-0.7);
         model.Rotate(new Vector3(0, 180, 0), Space.World);
         model.GetComponent<Renderer>().material.SetColor("_Scale", new Color(0f, 0f, 0f, 0f));
         
@@ -143,7 +160,7 @@ public static class DegasiPlanter
         
         // Pink Cap
         model = PrefabFactory.AttachModelFromPrefabTo("c7faff7e-d9ff-41b4-9782-98d2e09d29c1", planterModel.transform);
-        model.localPosition = new Vector3((float)0.6871,(float)0.471,(float)-0.05);
+        model.localPosition = new Vector3((float)0.6871,(float)0.371,(float)-0.05);
         model.Rotate(new Vector3(0, 180, 0), Space.World);
         model.GetComponent<Renderer>().material.SetColor("_Scale", new Color(0f, 0f, 0f, 0f));
       
@@ -165,9 +182,8 @@ public static class DegasiPlanter
       
         UnityEngine.Object.Destroy(obj.GetComponent<StorageContainer>());
         UnityEngine.Object.Destroy(obj.transform.Find("slots").gameObject);
-        UnityEngine.Object.Destroy(obj.transform.Find("slots_big").gameObject);
-        UnityEngine.Object.Destroy(obj.transform.Find("StorageRoot").gameObject);
-        UnityEngine.Object.Destroy(obj.transform.Find("grownPlants").gameObject);
+        UnityEngine.Object.Destroy(obj.transform.Find("StoragetRoot").gameObject); // game seems to have typo 
+        UnityEngine.Object.Destroy(obj.transform.Find("grownPlant").gameObject);        
       
       // Return
       
@@ -211,7 +227,7 @@ public static class DegasiPlanter
         CustomPrefab planterPrefab = new CustomPrefab(Info);
           // Initializes planterPrefab.Info to the argument Info
         
-        CloneTemplate planterClone = new CloneTemplate(Info, "87f5d3e6-e00b-4cf3-be39-0a9c7e951b84"); // model is stored in object called "model"
+        CloneTemplate planterClone = new CloneTemplate(Info, "5c8cb04b-9f30-49e7-8687-0cbb338fc7fa"); // model is stored in object called "model"
           // CloneTemplate(PrefabInfo Info, string classIdToClone) calls CloneTemplate(Info, TechType.None, classIDToClone, null)
           // CloneTemplate(PrefabInfo info, TechType techTypeToClone, string classIdToClone, AssetReferenceGameObject prefabToClone) calls PrefabTemplate(info) and then sets _techTypeToClone through _spawnType
           // PrefabTemplate(info) sets the internal variable PrefabInfo info to argument info
@@ -233,11 +249,11 @@ public static class DegasiPlanter
         
         planterPrefab.SetUnlock(TechType.PlanterBox);
 
-        // Register into the game:
+        // Register it into the game:
         planterPrefab.Register();
         registered = true;
         
-        // Set Recipe Data
+        // Set Recipe
         UpdateRecipe(config);
     }
 }

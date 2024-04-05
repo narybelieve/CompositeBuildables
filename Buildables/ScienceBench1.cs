@@ -3,6 +3,7 @@ using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
+using Nautilus.Handlers; // CraftDataHandler
 using Nautilus.Extensions;
 using UnityEngine;
 using UnityEditor;
@@ -13,15 +14,18 @@ using Nautilus.Utility;
 using UWE;
 
 using System.Collections; // IEnumerator
+using System.IO; // Path
+using System.Reflection; // Assembly
 
 namespace CompositeBuildables;
 
 public static class ScienceBench1
 {
     public static PrefabInfo Info { get; } = PrefabInfo
-        .WithTechType("ScienceBench1", "Science Bench 1", "Bench with microscope.");
-        // set the icon to that of the vanilla locker:
-        //.WithIcon(SpriteManager.Get(TechType.PlanterBox));
+        .WithTechType("ScienceBench1", "Science Bench 1", "Bench with microscope.")
+        .WithIcon(ImageUtils.LoadSpriteFromFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Assets", "ScienceBench1.png")));
+        
+    public static bool registered = false;
     
     public static IEnumerator ModifyPrefabAsync(GameObject obj) { // called on obj as obj is instantiated from this prefab
       
@@ -36,7 +40,7 @@ public static class ScienceBench1
       // Find the GameObject that holds the model for the object being instantiated
       
         GameObject counterModel = obj.transform.Find("biodome_lab_counter_01").gameObject; 
-      
+        
       //----------------------------------------------------------------------------------------------------------------
       // Use PrefabFactory to add models. All prefabs referenced must be listed in PrefabFactory.prefabIdModelNameList
       //----------------------------------------------------------------------------------------------------------------
@@ -85,7 +89,33 @@ public static class ScienceBench1
         yield return obj;
     }
     
-    public static void Register()
+    public static void UpdateRecipe(Config config)
+    {
+      if(!registered) return;
+      
+      switch (config.RecipeComplexity) {
+        case RecipeComplexityEnum.Simple:
+          CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
+            new Ingredient(TechType.Titanium, 2)
+          )); 
+          break;
+        case RecipeComplexityEnum.Fair:
+          CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
+            new Ingredient(TechType.Titanium, 3), 
+            new Ingredient(TechType.Glass, 1)
+          )); // Planter Box plus Lantern Tree
+          break;
+        case RecipeComplexityEnum.Complex:
+          CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
+            new Ingredient(TechType.Titanium, 4), // Bench + Microscope + Clipboard
+            new Ingredient(TechType.Glass, 5), // Microscope + Cylindrical Test Tube + Square Jar with Lid + Small Square Jar with Lid
+            new Ingredient(TechType.HatchingEnzymes, 1)
+          )); 
+          break;
+      }
+    }
+    
+    public static void Register(Config config)
     {
         // create prefab:
         CustomPrefab planterPrefab = new CustomPrefab(Info);
@@ -113,10 +143,11 @@ public static class ScienceBench1
         
         planterPrefab.SetUnlock(TechType.StarshipDesk);
 
-        // set recipe:
-        planterPrefab.SetRecipe(new RecipeData(new Ingredient(TechType.Titanium, 2))); // same as default recipe
-
         // finally, register it into the game:
         planterPrefab.Register();
+        registered = true;
+        
+        // Set Recipe Data
+        UpdateRecipe(config);
     }
 }

@@ -46,20 +46,17 @@ public static class PrefabFactory
             //  "biodome_lab_shelf_01_thing_glass" = some barely visible glass near the arm thing
             // To make this into a shelf with ends, place two of the lab_shelf_01 items at right angles at the ends and remove their "thing" models
         
-        // Rectangular Laboratory Shelves
-        "33acd899-72fe-4a98-85f9-b6811974fbeb", "biodome_lab_shelf_01", 
-        
         // Robotic Arm? Decorationsmod uses its own asset
         "68e7dcd8-fe09-4dac-b966-85463c3c58af", "biodome_Robot_Arm",
         
         // Microscope
-        "2cee55bc-6136-47c5-a1ed-14c8f3203856", "discovery_lab_props_01", 
+        "2cee55bc-6136-47c5-a1ed-14c8f3203856", "discovery_lab_props_01",
         
         // Fluid Analyzer
-        "9c5f22de-5049-48bb-ad1e-0d78c894210e", "discovery_lab_props_02", 
+        "9c5f22de-5049-48bb-ad1e-0d78c894210e", "discovery_lab_props_02",
         
         // Sample Analyzer
-        "3fd9050b-4baf-4a78-a883-e774c648887c", "discovery_lab_props_03", 
+        "3fd9050b-4baf-4a78-a883-e774c648887c", "discovery_lab_props_03",
         
         // Cylindrical Test Tube (named "Cylindrical sample flask" in Decorations mod)
         "7f601dd4-0645-414d-bb62-5b0b62985836", "biodome_lab_containers_tube_01",
@@ -74,10 +71,10 @@ public static class PrefabFactory
         "e3e00261-92fc-4f52-bad2-4f0e5802a43d", "biodome_lab_containers_close_02",
         
         // Clipboard
-        "a7519acf-6dec-429e-82ed-bbcf7a616c50", "docking_clerical_clipboard1", 
+        "a7519acf-6dec-429e-82ed-bbcf7a616c50", "docking_clerical_clipboard1",
         
         // Hatching Enzymes
-        "fab9bc63-1916-4434-a9c6-231f421ffbb5", "model", // 
+        "fab9bc63-1916-4434-a9c6-231f421ffbb5", "model",
         
         // Polyaniline
         "7e164f67-f4e7-41fc-98a5-7a84ccaa1d09", "Polyaniline",
@@ -189,7 +186,17 @@ public static class PrefabFactory
         "75ab087f-9934-4e2a-b025-02fc333a5c99", "Tropical_Plant_10a",
         
         // Land Tree 1
-        "1cc51be0-8ea9-4730-936f-23b562a9256f", "Land_tree_01_LOD0" // This model has other LODs, but this is probably because they are everywhere on the floating island. We can probably get away with just this one
+        "1cc51be0-8ea9-4730-936f-23b562a9256f", "Land_tree_01_LOD0", // This model has other LODs, but this is probably because they are everywhere on the floating island. We can probably get away with just this one
+        
+      //-----------------------------------------------------------------------
+      // TOYS
+      //-----------------------------------------------------------------------
+      
+        // Toy Car
+        "dfabc84e-c4c5-45d9-8b01-ca0eaeeb8e65", "model",
+        
+        // Model Aurora
+        "c0d320d2-537e-4128-90ec-ab1466cfbbc3", "starship_souvenir"
     };
     private static List<GameObject> prefabObjList = new List<GameObject>();
     
@@ -208,6 +215,17 @@ public static class PrefabFactory
             }
           } else {
             Debug.Log("CompositeBuildables.PrefabFactory: TryGetPrefab failed for " + prefabID);
+          }
+        }
+      } else { // Prefabs which are treated as "Existing Items" within Decorations Mod sometimes move for some reason. This accounts for that.
+        for(int i = 0; i < prefabIdModelNameList.Count; i = i + 2) { // step by 2 as we are stepping through a flattned list of pairs (prefab ID, model name)
+          if(!prefabObjList[i/2]) {
+            string prefabID = prefabIdModelNameList[i];
+            Debug.Log("CompositeBuildables.PrefabFactory: \tPrefab " + prefabID + " needs rebuilding");
+            IPrefabRequest task = PrefabDatabase.GetPrefabAsync(prefabID);
+            yield return task;
+            task.TryGetPrefab(out GameObject objTmp);
+            prefabObjList[i/2] = objTmp;
           }
         }
       }
@@ -243,6 +261,16 @@ public static class PrefabFactory
       GameObject victim = InstantiatePrefabInactive(prefabID); // gameObject we will harvest for its model and then destroy
       Transform result = victim.transform.Find(prefabIdModelNameList[2*GetIndex(prefabID)+1]);
       result.parent = to;
+      UnityEngine.Object.Destroy(victim);
+      return result; //to.transform.Find(prefabIdModelNameList[2*GetIndex(prefabID)+1]); // returns the model which was moved
+    }
+    
+    public static Transform AttachAllModelsFromPrefabTo(string prefabID, Transform to) { // returns the model which was moved
+      GameObject victim = InstantiatePrefabInactive(prefabID); // gameObject we will harvest for its model and then destroy
+      Transform result = victim.transform.Find(prefabIdModelNameList[2*GetIndex(prefabID)+1]);
+      for(int i = 0; i < victim.transform.childCount; i++) {
+        victim.transform.GetChild(i).parent = to;
+      }
       UnityEngine.Object.Destroy(victim);
       return result; //to.transform.Find(prefabIdModelNameList[2*GetIndex(prefabID)+1]); // returns the model which was moved
     }

@@ -14,24 +14,19 @@ using Nautilus.Utility;
 using UWE;
 
 using System.Collections; // IEnumerator
-using System.IO; // Path
-using System.Reflection; // Assembly
 
 namespace CompositeBuildables;
 
-public static class DegasiPlanter
+public static class DegasiPlanter2
 {
     public static PrefabInfo Info { get; } = PrefabInfo
-        .WithTechType("DegasiPlanter", "Degasi Planter", "Bart Torgal's planter from Degasi Base 1-a.")
-        .WithIcon(ImageUtils.LoadSpriteFromFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Assets", "DegasiPlanter.png")));
+        .WithTechType("DegasiPlanter2", "Degasi Planter 2", "Variation of Bart Torgal's planter from Degasi Base 1-a.")
+        // set the icon to that of the vanilla planter
+        .WithIcon(SpriteManager.Get(TechType.PlanterBox));
         
     public static bool registered = false;
     
     public static IEnumerator ModifyPrefabAsync(GameObject obj) { // called on obj as obj is instantiated from this prefab
-    
-      // Control loading distance
-        
-        PrefabUtils.AddBasicComponents(obj, Info.ClassID, Info.TechType, LargeWorldEntity.CellLevel.Near);
       
       // Wait for the PrefabFactory to complete asynchronous initialization
       
@@ -50,44 +45,20 @@ public static class DegasiPlanter
       // Use PrefabFactory to add models. All prefabs referenced must be listed in PrefabFactory.prefabIdModelNameList
       //----------------------------------------------------------------------------------------------------------------
       
-        // Lantern Tree is special - we need to steal its model AND deep copy its FruitPlant component
-        
-          // Get the object
-          GameObject lanternTreeObj = PrefabFactory.InstantiatePrefabInactive("8fa4a413-57fa-47a3-828d-de2255dbce4f");
+        // Alien Tree
+        Transform model = PrefabFactory.AttachModelFromPrefabTo("1cc51be0-8ea9-4730-936f-23b562a9256f", planterModel.transform);
+        model.localPosition = new Vector3((float)0,(float)0.3945,(float)0);
+        model.localScale = new Vector3((float)0.35, (float)0.35, (float)0.35);
+        foreach(Material mat in model.GetComponent<Renderer>().materials) {
+          mat.SetColor("_Scale", new Color(0f, 0f, 0f, 0f));
+        }
           
-          // Steal and re-position its model
-          Transform lanternTreeModel = lanternTreeObj.transform.Find(PrefabFactory.GetModelName("8fa4a413-57fa-47a3-828d-de2255dbce4f"));
-          lanternTreeModel.parent = planterModel.transform;
-          lanternTreeModel.localPosition = new Vector3((float)0,(float)0.3757,(float)0);
-            // Fruits 15--20 cause problems in the Cyclops: their SphereColliders are too high up and send it flying. 
-            // The solution is to remove the SphereColliders for these 5 fruits. It makes them un-pickable, but ~1/2 of them are out of reach anyway because this is an overworld-sized Lantern Tree
-            UnityEngine.Object.Destroy(lanternTreeModel.Find("Fruit_15").GetComponent<SphereCollider>());
-            UnityEngine.Object.Destroy(lanternTreeModel.Find("Fruit_16").GetComponent<SphereCollider>());
-            UnityEngine.Object.Destroy(lanternTreeModel.Find("Fruit_17").GetComponent<SphereCollider>());
-            UnityEngine.Object.Destroy(lanternTreeModel.Find("Fruit_18").GetComponent<SphereCollider>());
-            UnityEngine.Object.Destroy(lanternTreeModel.Find("Fruit_19").GetComponent<SphereCollider>());
-            UnityEngine.Object.Destroy(lanternTreeModel.Find("Fruit_20").GetComponent<SphereCollider>());
-            
-            
-          
-          FruitPlantClone fruitPlant = obj.transform.Find("model").gameObject.AddComponent<FruitPlantClone>(); // See FruitPlantClone for why the built-in FruitPlant can't be used here
-          var oldFruitPlant = lanternTreeObj.GetComponent<FruitPlant>();
-          
-          fruitPlant.fruits = new PickPrefab[oldFruitPlant.fruits.Length];
-          fruitPlant.fruitSpawnInterval = 50f; // default is 50f
-          //fruitPlant.fruitSpawnEnabled = true; 
-          for (int i = 0; i < fruitPlant.fruits.Length; i++) {
-            fruitPlant.fruits[i] = oldFruitPlant.fruits[i];
-          }
-          
-          Object.Destroy(lanternTreeObj);
-      
         // Small Fern Palm
         /*model = PrefabFactory.AttachModelFromPrefabTo("6d13066f-95c8-491b-965b-79ac3c67e6aa", planterModel.transform);
-        model.localPosition = new Vector3((float)-0.0061,(float)0.3757,(float)0.035);*/
+        model.position = planterModel.transform.position + new Vector3((float)-0.0061,(float)0.3945,(float)0.035);*/
         
         // Medium Fern Palm
-        Transform model = PrefabFactory.AttachModelFromPrefabTo("1d6d89dd-3e49-48b7-90e4-b521fbc3d36f", planterModel.transform);
+        model = PrefabFactory.AttachModelFromPrefabTo("1d6d89dd-3e49-48b7-90e4-b521fbc3d36f", planterModel.transform);
         model.Rotate(new Vector3(0, 180, 0), Space.World);
         model.localPosition = new Vector3((float)0.185,(float)0.3757,(float)-1);
         
@@ -182,18 +153,16 @@ public static class DegasiPlanter
         case RecipeComplexityEnum.Simple:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 4)
-          )); // Planter Box
+          )); 
           break;
         case RecipeComplexityEnum.Fair:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
-            new Ingredient(TechType.Titanium, 4), 
-            new Ingredient(TechType.HangingFruit, 1)
-          )); // Planter Box plus Lantern Tree
+            new Ingredient(TechType.Titanium, 4)
+          )); 
           break;
         case RecipeComplexityEnum.Complex:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 4), // Planter Box
-            new Ingredient(TechType.HangingFruit, 1), // Lantern Tree
             new Ingredient(TechType.FernPalmSeed, 2), // 2 Fern Palms
             new Ingredient(TechType.OrangePetalsPlantSeed, 1), // Grub Basket
             new Ingredient(TechType.OrangeMushroomSpore, 1), // Jaffa Cup
@@ -233,7 +202,7 @@ public static class DegasiPlanter
         
         planterPrefab.SetUnlock(TechType.PlanterBox);
 
-        // Register into the game:
+        // finally, register it into the game:
         planterPrefab.Register();
         registered = true;
         
