@@ -54,6 +54,7 @@ public static class LabShelving
         box.size = new Vector3(0.8f,0.9f,0.5f);
         
         ConstructableBounds cb = obj.AddComponent<ConstructableBounds>(); // This one is used for the pre-construction hologram
+        cb.bounds.position = new Vector3(0f,0.46f,0f);
         cb.bounds.size = new Vector3(0.8f,0.9f,0.5f);
       
       //----------------------------------------------------------------------------------------------------------------

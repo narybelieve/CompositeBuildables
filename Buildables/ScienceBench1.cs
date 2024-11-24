@@ -44,9 +44,11 @@ public static class ScienceBench1
       // Add Colliders
       
         BoxCollider box = obj.AddComponent<BoxCollider>();
+        //box.center = new Vector3(0f,0.51f,0f);
         box.size = new Vector3(2.2433f,1.02f,0.8673f);
         
         ConstructableBounds cb = obj.AddComponent<ConstructableBounds>(); // This one is used for the pre-construction hologram
+        cb.bounds.position = new Vector3(0f,0.52f,0f);
         cb.bounds.size = new Vector3(2.2433f,1.02f,0.8673f);
       //----------------------------------------------------------------------------------------------------------------
       // Use PrefabFactory to add models. All prefabs referenced must be listed in PrefabFactory.prefabIdModelNameList

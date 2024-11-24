@@ -225,14 +225,23 @@ public class MushroomGrower : HandTarget, IHandTarget//, IProtoEventListener
   }
   
   public void OnEnable() {
+    string id = GetComponent<PrefabIdentifier>().Id;
+    Plugin.Logger.LogDebug("MushroomGrower::OnEnable() line 0 with id = " + id);
     Plugin.SaveCache.OnStartedSaving += OnBeforeSave;
+    Plugin.Logger.LogDebug("MushroomGrower::OnEnable() line 1 with id = " + id);
     if (storageContainer == null) return;
+    Plugin.Logger.LogDebug("MushroomGrower::OnEnable() line 2 with id = " + id);
     storageContainer.enabled = true;
+    Plugin.Logger.LogDebug("MushroomGrower::OnEnable() line 3 with id = " + id);
     storageContainer.container.onRemoveItem += RemoveItem;
+    Plugin.Logger.LogDebug("MushroomGrower::OnEnable() line 4 with id = " + id);
     storageContainer.container.isAllowedToAdd = IsAllowedToAdd;
+    Plugin.Logger.LogDebug("MushroomGrower::OnEnable() line 5 with id = " + id);
   }
   
   private void OnDisable() {
+    string id = GetComponent<PrefabIdentifier>().Id;
+    Plugin.Logger.LogDebug("MushroomGrower::OnDisable() called with id = " + id);
     Plugin.SaveCache.OnStartedSaving -= OnBeforeSave;
     if (storageContainer == null) return;
     storageContainer.container.onRemoveItem -= RemoveItem;
