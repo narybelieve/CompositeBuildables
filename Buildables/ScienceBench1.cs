@@ -41,6 +41,13 @@ public static class ScienceBench1
       
         GameObject counterModel = obj.transform.Find("biodome_lab_counter_01").gameObject; 
         
+      // Add Colliders
+      
+        BoxCollider box = obj.AddComponent<BoxCollider>();
+        box.size = new Vector3(2.2433f,1.02f,0.8673f);
+        
+        ConstructableBounds cb = obj.AddComponent<ConstructableBounds>(); // This one is used for the pre-construction hologram
+        cb.bounds.size = new Vector3(2.2433f,1.02f,0.8673f);
       //----------------------------------------------------------------------------------------------------------------
       // Use PrefabFactory to add models. All prefabs referenced must be listed in PrefabFactory.prefabIdModelNameList
       //----------------------------------------------------------------------------------------------------------------
@@ -89,17 +96,17 @@ public static class ScienceBench1
         yield return obj;
     }
     
-    public static void UpdateRecipe(Config config)
+    public static void UpdateRecipe()
     {
       if(!registered) return;
       
-      switch (config.RecipeComplexity) {
+      switch (Plugin.config.RecipeComplexity) {
         case RecipeComplexityEnum.Simple:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 2)
           )); 
           break;
-        case RecipeComplexityEnum.Fair:
+        case RecipeComplexityEnum.Standard:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 3), 
             new Ingredient(TechType.Glass, 1)
@@ -115,7 +122,7 @@ public static class ScienceBench1
       }
     }
     
-    public static void Register(Config config)
+    public static void Register()
     {
         // create prefab:
         CustomPrefab planterPrefab = new CustomPrefab(Info);
@@ -148,6 +155,6 @@ public static class ScienceBench1
         registered = true;
         
         // Set Recipe Data
-        UpdateRecipe(config);
+        UpdateRecipe();
     }
 }

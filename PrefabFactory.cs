@@ -133,7 +133,7 @@ public static class PrefabFactory
           // Small. No Stem
           "8e4e640e-4c04-4168-a0cc-4ec86b709345", "land_plant_middle_05_03",
           
-          // Spore. No model - used for MushroomTerrariumSmall only
+          // Spore. No model - used for MushroomGrower only
           "ff727b98-8d85-416a-9ee7-4beda86d2ba2", "",
         
         // Grub Basket
@@ -205,23 +205,23 @@ public static class PrefabFactory
         for(int i = 0; i < prefabIdModelNameList.Count; i = i + 2) { // step by 2 as we are stepping through a flattned list of pairs (prefab ID, model name)
           string prefabID = prefabIdModelNameList[i];
           IPrefabRequest task = PrefabDatabase.GetPrefabAsync(prefabID);
-          Debug.Log("CompositeBuildables.PrefabFactory: ensureInitialized with prefabID = " + prefabID);
+          Plugin.Logger.LogDebug("CompositeBuildables.PrefabFactory: ensureInitialized with prefabID = " + prefabID);
           yield return task;
           if(task.TryGetPrefab(out GameObject objTmp)) {
-            Debug.Log("CompositeBuildables.PrefabFactory: TryGetPrefab succeeded for " + prefabID);
+            Plugin.Logger.LogDebug("CompositeBuildables.PrefabFactory: TryGetPrefab succeeded for " + prefabID);
             prefabObjList.Add(objTmp);
             foreach (Transform child in objTmp.transform) {
-              Debug.Log("CompositeBuildables.PrefabFactory: \tPrefab " + prefabID + ".transform contains a model called " + child.name);
+              Plugin.Logger.LogDebug("CompositeBuildables.PrefabFactory: \tPrefab " + prefabID + ".transform contains a model called " + child.name);
             }
           } else {
-            Debug.Log("CompositeBuildables.PrefabFactory: TryGetPrefab failed for " + prefabID);
+            Plugin.Logger.LogDebug("CompositeBuildables.PrefabFactory: TryGetPrefab failed for " + prefabID);
           }
         }
       } else { // Prefabs which are treated as "Existing Items" within Decorations Mod sometimes move for some reason. This accounts for that.
         for(int i = 0; i < prefabIdModelNameList.Count; i = i + 2) { // step by 2 as we are stepping through a flattned list of pairs (prefab ID, model name)
           if(!prefabObjList[i/2]) {
             string prefabID = prefabIdModelNameList[i];
-            Debug.Log("CompositeBuildables.PrefabFactory: \tPrefab " + prefabID + " needs rebuilding");
+            Plugin.Logger.LogDebug("CompositeBuildables.PrefabFactory: \tPrefab " + prefabID + " needs rebuilding");
             IPrefabRequest task = PrefabDatabase.GetPrefabAsync(prefabID);
             yield return task;
             task.TryGetPrefab(out GameObject objTmp);

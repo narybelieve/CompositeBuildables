@@ -32,6 +32,18 @@ public static class MushroomTerrariumLarge
       // Wait for the PrefabFactory to complete asynchronous initialization
       
         yield return CoroutineHost.StartCoroutine(PrefabFactory.ensureInitialized());
+        
+        // Add MushroomGrower component
+        
+          MushroomGrower mg = obj.AddComponent<MushroomGrower>();
+          mg.storageContainer = PrefabUtils.AddStorageContainer(obj, "StorageRoot", "MushroomTerrariumSmall", 6, 5, false);
+          mg.storageContainer.storageLabel = "MUSHROOM TERRARIUM";
+          mg.speedFactor = 2f;
+          mg.OnEnable();
+        
+      // Place storage container 
+        
+        StorageContainer container = PrefabUtils.AddStorageContainer(obj, "StorageRoot", "MushroomTerrariumSmall", 6, 8, false);
 
       // Configure placement rules
       
@@ -44,7 +56,8 @@ public static class MushroomTerrariumLarge
         obj.transform.Find("Capsule").localScale = new Vector3((float)1,(float)1.065,(float)1);
         tubeShelfModel.transform.localScale = new Vector3((float)1,(float)1.065,(float)1);
         
-        // Add and set a collider for use for the pre-construction hologram
+      // Add and set a collider for use for the pre-construction hologram
+        
         ConstructableBounds cb = obj.AddComponent<ConstructableBounds>();
         cb.bounds.position = new Vector3(0f,2.0f,0f);
         cb.bounds.extents = new Vector3(
@@ -145,18 +158,18 @@ public static class MushroomTerrariumLarge
         yield return obj;
     }
     
-    public static void UpdateRecipe(Config config)
+    public static void UpdateRecipe()
     {
       if(!registered) return;
       
-      switch (config.RecipeComplexity) {
+      switch (Plugin.config.RecipeComplexity) {
         case RecipeComplexityEnum.Simple:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 4),
             new Ingredient(TechType.Glass, 2)
           )); 
           break;
-        case RecipeComplexityEnum.Fair:
+        case RecipeComplexityEnum.Standard:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 4),
             new Ingredient(TechType.Glass, 2),
@@ -179,7 +192,7 @@ public static class MushroomTerrariumLarge
       }
     }
     
-    public static void Register(Config config)
+    public static void Register()
     {
         // create prefab:
         CustomPrefab tubeShelfPrefab = new CustomPrefab(Info);
@@ -212,6 +225,6 @@ public static class MushroomTerrariumLarge
         registered = true;
         
         // Set Recipe Data
-        UpdateRecipe(config);
+        UpdateRecipe();
     }
 }

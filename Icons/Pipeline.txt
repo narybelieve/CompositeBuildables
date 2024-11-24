@@ -1,0 +1,12 @@
+Use large photo frame with pure white image as background
+Screenshot from above
+Paste screenshot into Gimp
+	Add Alpha Channel
+	Use Color Select tool with threshold ~43 to select background
+	Use "Select"/"Grow..." to expand selection by 1 pixel
+	Delete selection
+Possible further processing (used in DegasiPlanter2)
+	Edit levels and clip dark grays to black
+	Bump up saturation a bit
+Export as .PNG
+

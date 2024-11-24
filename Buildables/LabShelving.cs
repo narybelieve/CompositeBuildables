@@ -47,6 +47,14 @@ public static class LabShelving
         
         GameObject cubeModel = obj.transform.Find("Cube").gameObject; 
         cubeModel.transform.localScale = new Vector3(0.42f, 0.42f, 0.42f); 
+        
+      // Add Colliders
+      
+        BoxCollider box = obj.AddComponent<BoxCollider>();
+        box.size = new Vector3(0.8f,0.9f,0.5f);
+        
+        ConstructableBounds cb = obj.AddComponent<ConstructableBounds>(); // This one is used for the pre-construction hologram
+        cb.bounds.size = new Vector3(0.8f,0.9f,0.5f);
       
       //----------------------------------------------------------------------------------------------------------------
       // Use PrefabFactory to add models. All prefabs referenced must be listed in PrefabFactory.prefabIdModelNameList
@@ -176,17 +184,17 @@ public static class LabShelving
         yield return obj;
     }
     
-    public static void UpdateRecipe(Config config)
+    public static void UpdateRecipe()
     {
       if(!registered) return;
       
-      switch (config.RecipeComplexity) {
+      switch (Plugin.config.RecipeComplexity) {
         case RecipeComplexityEnum.Simple:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 2)
           )); // Main Shelf
           break;
-        case RecipeComplexityEnum.Fair:
+        case RecipeComplexityEnum.Standard:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 3), // Main Shelf + Side Shelves
             new Ingredient(TechType.Glass, 1), 
@@ -211,7 +219,7 @@ public static class LabShelving
       }
     }
     
-    public static void Register(Config config)
+    public static void Register()
     {
         // create prefab:
         
@@ -245,6 +253,6 @@ public static class LabShelving
         registered = true;
         
         // Set Recipe
-        UpdateRecipe(config);
+        UpdateRecipe();
     }
 }

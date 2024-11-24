@@ -155,7 +155,7 @@ public static class DegasiPlanter2
             new Ingredient(TechType.Titanium, 4)
           )); 
           break;
-        case RecipeComplexityEnum.Fair:
+        case RecipeComplexityEnum.Standard:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 4)
           )); 

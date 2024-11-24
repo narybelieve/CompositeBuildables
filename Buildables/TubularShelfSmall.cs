@@ -43,6 +43,16 @@ public static class TubularShelfSmall
         obj.transform.Find("Capsule").localScale = new Vector3((float)0.6,(float)0.55,(float)0.6);
         tubeShelfModel.transform.localScale = new Vector3((float)0.6,(float)0.55,(float)0.6);
         
+      // Add and set a collider for use for the pre-construction hologram
+      
+        ConstructableBounds cb = obj.AddComponent<ConstructableBounds>();
+        cb.bounds.position = new Vector3(0f,1.5f,0f);
+        cb.bounds.extents = new Vector3(
+          0.3f, 
+          0.7f, 
+          0.3f
+        );
+        
       
       //----------------------------------------------------------------------------------------------------------------
       // Use PrefabFactory to add models. All prefabs referenced must be listed in PrefabFactory.prefabIdModelNameList
@@ -55,7 +65,7 @@ public static class TubularShelfSmall
         
         // For each Shelf
         for(int i = 0; i < 4; i++) {
-          Debug.Log("Iteration "+i.ToString());
+          //Debug.Log("Iteration "+i.ToString());
           float yPos;
           float dy;
           float theta;
@@ -127,18 +137,18 @@ public static class TubularShelfSmall
         yield return obj;
     }
     
-    public static void UpdateRecipe(Config config)
+    public static void UpdateRecipe()
     {
       if(!registered) return;
       
-      switch (config.RecipeComplexity) {
+      switch (Plugin.config.RecipeComplexity) {
         case RecipeComplexityEnum.Simple:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 2),
             new Ingredient(TechType.Glass, 1)
           )); 
           break;
-        case RecipeComplexityEnum.Fair:
+        case RecipeComplexityEnum.Standard:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 2),
             new Ingredient(TechType.Glass, 1) // TO BE COMPLETED
@@ -186,6 +196,6 @@ public static class TubularShelfSmall
         registered = true;
         
         // Set Recipe
-        UpdateRecipe(config);
+        UpdateRecipe();
     }
 }

@@ -21,147 +21,6 @@ using ProtoBuf;
 
 namespace CompositeBuildables;
 
-public class MushroomGrower : HandTarget, IHandTarget
-{
-  public StorageContainer storageContainer;
-  
-  private const int maxPinkCap = 15;
-  private const int maxRattler = 9;
-  private const int maxJaffa = 6;
-  
-  private const float pinkTime = 20f;
-  private const float rattlerTime = 100f/3f;
-  private const float jaffaTime = 50f;
-  
-  private float timeRemainingPink = -1f;
-  private float timeRemainingRattler = -1f;
-  private float timeRemainingJaffa = -1f;
-  
-  public void TryGrowPink() {
-    if(timeRemainingPink < 0f && storageContainer.container.GetCount(TechType.PinkMushroom) < maxPinkCap) {
-      timeRemainingPink = pinkTime;
-    }
-  }
-  
-  public void TryGrowRattler() {
-    if(timeRemainingRattler < 0f  && storageContainer.container.GetCount(TechType.PurpleRattle) < maxRattler) {
-      timeRemainingRattler = rattlerTime;
-    }
-  }
-  
-  public void TryGrowJaffa() {
-    if(timeRemainingJaffa < 0f  && storageContainer.container.GetCount(TechType.OrangeMushroomSpore) < maxJaffa) { 
-      timeRemainingJaffa = jaffaTime;
-    }
-  }
-  
-  public void OnHandHover(GUIHand hand) {
-    if(!base.enabled) return;
-    Constructable c = base.gameObject.GetComponent<Constructable>();
-    if(!(bool)c || c.constructed) {
-      string subscript = "Stores Filled";
-    
-      if (timeRemainingPink >= 0f || timeRemainingRattler >= 0f || timeRemainingJaffa >= 0f)
-      {
-        float pinkFrac = 1f - Mathf.Clamp01(timeRemainingPink / pinkTime);
-        float rattlerFrac = 1f - Mathf.Clamp01(timeRemainingRattler / rattlerTime);
-        float jaffaFrac = 1f - Mathf.Clamp01(timeRemainingJaffa / jaffaTime);
-        subscript = "Pink Cap "+(pinkFrac*100f).ToString("0\\%")+", Speckled Rattler "+(rattlerFrac*100f).ToString("0\\%")+", Jaffa Cup "+(jaffaFrac*100f).ToString("0\\%");
-      }
-      HandReticle.main.SetText(HandReticle.TextType.Hand, "Use Mushroom Terrarium", translate: false, GameInput.Button.LeftHand);
-      HandReticle.main.SetText(HandReticle.TextType.HandSubscript, "Production Progress: "+subscript, translate: false);
-      HandReticle.main.SetIcon(HandReticle.IconType.Interact);
-    }
-  }
-  
-  public void OnHandClick(GUIHand hand) {
-    Constructable c = base.gameObject.GetComponent<Constructable>();
-    if(!(bool)c || c.constructed) {
-      storageContainer.Open();
-    }
-  }
-  
-  public void UpdateGrowth() {
-    float dt = 1f * DayNightCycle.main.dayNightSpeed; // 1f is the invokation interval specified in InvokeRepeating
-    if(dt > 0f) {
-      if(timeRemainingPink > 0f) {
-        timeRemainingPink = Mathf.Max(0f, timeRemainingPink - dt); 
-      }
-      if(timeRemainingRattler > 0f) {
-        timeRemainingRattler = Mathf.Max(0f, timeRemainingRattler - dt); 
-      }
-      if(timeRemainingJaffa > 0f) {
-        timeRemainingJaffa = Mathf.Max(0f, timeRemainingJaffa - dt);
-      }
-    }
-    if(timeRemainingPink == 0f)
-    {
-      timeRemainingPink = -1f;
-      if(storageContainer.container.HasRoomFor(1,1)) {
-        Pickupable component = Object.Instantiate(PrefabFactory.GetPrefabGameObject("7f9a765d-0b4e-4b3f-81b9-38b38beedf55")).GetComponent<Pickupable>();
-        component.Pickup(events: false);
-        InventoryItem item = new InventoryItem(component);
-        storageContainer.container.UnsafeAdd(item);
-      }
-      TryGrowPink();
-    }
-    if(timeRemainingRattler == 0f)
-    {
-      timeRemainingRattler = -1f;
-      if(storageContainer.container.HasRoomFor(1,1)) {
-        Pickupable component = Object.Instantiate(PrefabFactory.GetPrefabGameObject("28818d8a-5e50-41f0-8e14-44cb89a0b611")).GetComponent<Pickupable>();
-        component.Pickup(events: false);
-        InventoryItem item = new InventoryItem(component);
-        storageContainer.container.UnsafeAdd(item);
-      }
-      TryGrowRattler();
-    }
-    if(timeRemainingJaffa == 0f)
-    {
-      timeRemainingJaffa = -1f;
-      if(storageContainer.container.HasRoomFor(2,2)) {
-        Pickupable component = Object.Instantiate(PrefabFactory.GetPrefabGameObject("ff727b98-8d85-416a-9ee7-4beda86d2ba2")).GetComponent<Pickupable>();
-        component.Pickup(events: false);
-        InventoryItem item = new InventoryItem(component);
-        storageContainer.container.UnsafeAdd(item);
-      }
-      TryGrowJaffa();
-    }
-  }
-  
-  private bool IsAllowedToAdd(Pickupable pickupable, bool verbose)
-  {
-    return false;
-  }
-  
-  private void Start() { // invoked at the start of the next frame after AddComponent<MushroomGrower>
-    TryGrowPink();
-    TryGrowRattler();
-    TryGrowJaffa();
-    InvokeRepeating("UpdateGrowth", 1f, 1f);
-  }
-  
-  public void OnEnable() {
-    if (storageContainer == null) return;
-    storageContainer.enabled = true;
-    storageContainer.container.onRemoveItem += RemoveItem;
-    storageContainer.container.isAllowedToAdd = IsAllowedToAdd;
-  }
-  
-  private void OnDisable() {
-    if (storageContainer == null) return;
-    storageContainer.container.onRemoveItem -= RemoveItem;
-    storageContainer.container.isAllowedToAdd = null;
-    storageContainer.enabled = false;
-  }
-  
-  private void RemoveItem(InventoryItem item) {
-    TryGrowPink();
-    TryGrowRattler();
-    TryGrowJaffa();
-  }
-}
-
 public static class MushroomTerrariumSmall
 {
     public static PrefabInfo Info { get; } = PrefabInfo
@@ -172,22 +31,17 @@ public static class MushroomTerrariumSmall
     
     public static IEnumerator ModifyPrefabAsync(GameObject obj) { // called on obj as obj is instantiated from this prefab
       
-        // Place storage container within a child so that it doesn't trigger on click of obj
-        
-          GameObject child = new GameObject("childOfTerrarium");
-          child.transform.parent = obj.transform;
-          StorageContainer container = PrefabUtils.AddStorageContainer(child, "StorageRoot", "MushroomTerrariumSmall", 6, 8, false);
+      // Wait for the PrefabFactory to complete asynchronous initialization
+      
+        yield return CoroutineHost.StartCoroutine(PrefabFactory.ensureInitialized());
         
         // Add MushroomGrower component
         
           MushroomGrower mg = obj.AddComponent<MushroomGrower>();
-          mg.storageContainer = container;
+          mg.storageContainer = PrefabUtils.AddStorageContainer(obj, "StorageRoot", "MushroomTerrariumSmall", 6, 5, false);
+          mg.storageContainer.storageLabel = "MUSHROOM TERRARIUM";
           mg.OnEnable();
       
-      // Wait for the PrefabFactory to complete asynchronous initialization
-      
-        yield return CoroutineHost.StartCoroutine(PrefabFactory.ensureInitialized());
-
       // Configure placement rules
       
         ConstructableFlags constructableFlags = ConstructableFlags.Inside | ConstructableFlags.Rotatable | ConstructableFlags.Ground;
@@ -199,7 +53,8 @@ public static class MushroomTerrariumSmall
         obj.transform.Find("Capsule").localScale = new Vector3((float)0.6,(float)0.55,(float)0.6);
         tubeShelfModel.transform.localScale = new Vector3((float)0.6,(float)0.55,(float)0.6);
         
-        // Add and set a collider for use for the pre-construction hologram
+      // Add and set a collider for use for the pre-construction hologram
+      
         ConstructableBounds cb = obj.AddComponent<ConstructableBounds>();
         cb.bounds.position = new Vector3(0f,1.5f,0f);
         cb.bounds.extents = new Vector3(
@@ -318,18 +173,18 @@ public static class MushroomTerrariumSmall
         yield return obj;
     }
     
-    public static void UpdateRecipe(Config config)
+    public static void UpdateRecipe()
     {
       if(!registered) return;
       
-      switch (config.RecipeComplexity) {
+      switch (Plugin.config.RecipeComplexity) {
         case RecipeComplexityEnum.Simple:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 2),
             new Ingredient(TechType.Glass, 1)
           )); 
           break;
-        case RecipeComplexityEnum.Fair:
+        case RecipeComplexityEnum.Standard:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 2),
             new Ingredient(TechType.Glass, 1),
@@ -352,7 +207,7 @@ public static class MushroomTerrariumSmall
       }
     }
     
-    public static void Register(Config config)
+    public static void Register()
     {
         // create prefab:
         CustomPrefab tubeShelfPrefab = new CustomPrefab(Info);
@@ -385,6 +240,6 @@ public static class MushroomTerrariumSmall
         registered = true;
         
         // Set Recipe Data
-        UpdateRecipe(config);
+        UpdateRecipe();
     }
 }

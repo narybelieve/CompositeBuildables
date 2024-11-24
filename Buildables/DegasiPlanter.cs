@@ -14,6 +14,7 @@ using Nautilus.Utility;
 using UWE;
 
 using System.Collections; // IEnumerator
+using System.Collections.Generic; // List
 using System.IO; // Path
 using System.Reflection; // Assembly
 
@@ -70,12 +71,11 @@ public static class DegasiPlanter
             
             
           
-          FruitPlantClone fruitPlant = obj.transform.Find("model").gameObject.AddComponent<FruitPlantClone>(); // See FruitPlantClone for why the built-in FruitPlant can't be used here
+          FruitPlantClone fruitPlant = obj.AddComponent<FruitPlantClone>(); // See FruitPlantClone for why the built-in FruitPlant can't be used here
           var oldFruitPlant = lanternTreeObj.GetComponent<FruitPlant>();
           
           fruitPlant.fruits = new PickPrefab[oldFruitPlant.fruits.Length];
-          fruitPlant.fruitSpawnInterval = 50f; // default is 50f
-          //fruitPlant.fruitSpawnEnabled = true; 
+          // spawn interval is handled by FruitPlantClone
           for (int i = 0; i < fruitPlant.fruits.Length; i++) {
             fruitPlant.fruits[i] = oldFruitPlant.fruits[i];
           }
@@ -174,17 +174,17 @@ public static class DegasiPlanter
         yield return obj;
     }
     
-    public static void UpdateRecipe(Config config)
+    public static void UpdateRecipe()
     {
       if(!registered) return;
       
-      switch (config.RecipeComplexity) {
+      switch (Plugin.config.RecipeComplexity) {
         case RecipeComplexityEnum.Simple:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 4)
           )); // Planter Box
           break;
-        case RecipeComplexityEnum.Fair:
+        case RecipeComplexityEnum.Standard:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 4), 
             new Ingredient(TechType.HangingFruit, 1)
@@ -205,7 +205,7 @@ public static class DegasiPlanter
       }
     }
     
-    public static void Register(Config config)
+    public static void Register()
     {
         // create prefab:
         CustomPrefab planterPrefab = new CustomPrefab(Info);
@@ -238,6 +238,6 @@ public static class DegasiPlanter
         registered = true;
         
         // Set Recipe Data
-        UpdateRecipe(config);
+        UpdateRecipe();
     }
 }

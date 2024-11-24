@@ -87,12 +87,11 @@ public static class DegasiPlanterRound
             
             
           
-          FruitPlantClone fruitPlant = obj.transform.Find("model").gameObject.AddComponent<FruitPlantClone>(); // See FruitPlantClone for why the built-in FruitPlant can't be used here
+          FruitPlantClone fruitPlant = obj.AddComponent<FruitPlantClone>(); // See FruitPlantClone for why the built-in FruitPlant can't be used here
           var oldFruitPlant = lanternTreeObj.GetComponent<FruitPlant>();
           
           fruitPlant.fruits = new PickPrefab[oldFruitPlant.fruits.Length];
-          fruitPlant.fruitSpawnInterval = 50f; // default is 50f
-          //fruitPlant.fruitSpawnEnabled = true; 
+          // spawn interval is handled by FruitPlantClone
           for (int i = 0; i < fruitPlant.fruits.Length; i++) {
             fruitPlant.fruits[i] = oldFruitPlant.fruits[i];
           }
@@ -190,17 +189,17 @@ public static class DegasiPlanterRound
         yield return obj;
     }
     
-    public static void UpdateRecipe(Config config)
+    public static void UpdateRecipe()
     {
       if(!registered) return;
       
-      switch (config.RecipeComplexity) {
+      switch (Plugin.config.RecipeComplexity) {
         case RecipeComplexityEnum.Simple:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 4)
           )); // Planter Box
           break;
-        case RecipeComplexityEnum.Fair:
+        case RecipeComplexityEnum.Standard:
           CraftDataHandler.SetRecipeData(Info.TechType, new RecipeData(
             new Ingredient(TechType.Titanium, 4), 
             new Ingredient(TechType.HangingFruit, 1)
@@ -221,7 +220,7 @@ public static class DegasiPlanterRound
       }
     }
     
-    public static void Register(Config config)
+    public static void Register()
     {
         // create prefab:
         CustomPrefab planterPrefab = new CustomPrefab(Info);
@@ -254,6 +253,6 @@ public static class DegasiPlanterRound
         registered = true;
         
         // Set Recipe
-        UpdateRecipe(config);
+        UpdateRecipe();
     }
 }
